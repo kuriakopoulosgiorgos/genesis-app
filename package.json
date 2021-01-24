@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0",
+    "start": "ng serve --host 0.0.0.0 --ssl --ssl-key ~/Documents/localhost.key  --ssl-cert ~/Documents/localhost.crt",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -20,6 +20,8 @@
     "@angular/platform-browser-dynamic": "~10.0.9",
     "@angular/router": "~10.0.9",
     "@babylonjs/core": "^4.2.0",
+    "@babylonjs/gui": "^4.2.0",
+    "@babylonjs/loaders": "^4.2.0",
     "babylonjs": "^4.2.0",
     "babylonjs-loaders": "^4.2.0",
     "bootstrap": "^4.5.3",
@@ -28,6 +30,7 @@
     "rxjs": "~6.5.5",
     "save": "^2.4.0",
     "tslib": "^2.0.0",
+    "webxr-polyfill": "^2.0.3",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
