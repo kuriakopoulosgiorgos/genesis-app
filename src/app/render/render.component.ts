@@ -24,17 +24,21 @@ export class RenderComponent implements OnInit, OnDestroy, Renderable {
   fps: string = '';
   isFullScreen: boolean;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.graphicsEngine = new GraphicsEngine(this);
     this.graphicsEngine.start();
 
-    this.graphicsEngine.fpsCount$.pipe(takeUntil(this.destroy))
-    .subscribe(fps => this.fps = fps.toFixed(3));
+    this.graphicsEngine.fpsCount$.pipe(
+      takeUntil(this.destroy)
+    )
+      .subscribe(fps => this.fps = fps.toFixed(3));
 
-    this.graphicsEngine.isFullScreen$.pipe(takeUntil(this.destroy))
-    .subscribe(isFullScreen => this.isFullScreen = isFullScreen);
+    this.graphicsEngine.isFullScreen$.pipe(
+      takeUntil(this.destroy)
+    )
+      .subscribe(isFullScreen => this.isFullScreen = isFullScreen);
   }
 
   ngAfterViewInit(): void {
