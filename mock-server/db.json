@@ -1,0 +1,16 @@
+{
+  "products": [
+    {
+      "name": "FUTURA office chair",
+      "category": "Office",
+      "description": "A beautiful and comfortable chair for your office",
+      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcCxyOxlQZNWEwGq8LYYrRgbHugDn-IAbsSNssI3sQTS2fG3pZd2OFtc0LRrLXK1wPmcxi6BA&usqp=CAc"
+    },
+    {
+      "name": "BlitzWolf office Chair",
+      "category": "Office",
+      "description": "An ergonomic office chair design",
+      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0WvlRDTcqymjyMaKuUZdmv4X1o77cXeS4Iai5646wLxhGQq5wfq3M1nc15IQ7mzBBEFEYebg&usqp=CAc"
+    }
+  ]
+}

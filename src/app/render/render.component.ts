@@ -1,3 +1,4 @@
+import { ProductService } from './../product.service';
 import { Renderable } from './renderable';
 import { GraphicsEngine } from './graphics/graphics-engine';
 import {
@@ -9,6 +10,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Product } from '../shared/models/product-model';
 
 @Component({
   selector: 'app-render',
@@ -24,7 +26,9 @@ export class RenderComponent implements OnInit, OnDestroy, Renderable {
   fps: string = '';
   isFullScreen: boolean;
 
-  constructor() { }
+  products: Product[];
+
+  constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
     this.graphicsEngine = new GraphicsEngine(this);
@@ -39,6 +43,8 @@ export class RenderComponent implements OnInit, OnDestroy, Renderable {
       takeUntil(this.destroy)
     )
       .subscribe(isFullScreen => this.isFullScreen = isFullScreen);
+
+    this.productService.getProducts().subscribe(products => this.products = products);
   }
 
   ngAfterViewInit(): void {
