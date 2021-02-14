@@ -1,7 +1,9 @@
 import { Subject } from 'rxjs';
 import { PointerEventTypes } from '@babylonjs/core/Events/pointerEvents';
-import { Scene } from '@babylonjs/core/scene';
+import { Scene } from '@babylonjs/core';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class PointerInteractor {
 
   private _isPointerDown = false;
@@ -13,9 +15,11 @@ export class PointerInteractor {
   private _onDoubleTap = new Subject();
   onDoubleTap$ = this._onDoubleTap.asObservable();
 
-  constructor(private scene: Scene) {
+  constructor() {}
 
-    this.scene.onPointerObservable.add(pointerInfo => {
+
+  interactWithScene(scene: Scene): void {
+    scene.onPointerObservable.add(pointerInfo => {
       switch (pointerInfo.type) {
         case PointerEventTypes.POINTERDOWN:
           this._isPointerDown = true;
@@ -26,7 +30,7 @@ export class PointerInteractor {
       }
     });
 
-    this.scene.onPointerObservable.add(eventData => {
+    scene.onPointerObservable.add(eventData => {
       // double tap
       if (this.pointerTap && eventData.type === PointerEventTypes.POINTERTAP) {
         this._onDoubleTap.next();

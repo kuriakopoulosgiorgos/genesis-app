@@ -20,7 +20,6 @@ import { Product } from '../shared/models/product-model';
 export class RenderComponent implements OnInit, OnDestroy, Renderable {
   @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
 
-  private graphicsEngine: GraphicsEngine;
   private destroy = new Subject();
 
   fps: string = '';
@@ -28,11 +27,10 @@ export class RenderComponent implements OnInit, OnDestroy, Renderable {
 
   products: Product[];
 
-  constructor(private productService: ProductService) { }
+  constructor(private graphicsEngine: GraphicsEngine, private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.graphicsEngine = new GraphicsEngine(this);
-    this.graphicsEngine.start();
+    this.graphicsEngine.start(this);
 
     this.graphicsEngine.fpsCount$.pipe(
       takeUntil(this.destroy)
