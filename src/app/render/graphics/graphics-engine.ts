@@ -60,13 +60,15 @@ export class GraphicsEngine {
 
   private async createScene(canvas: HTMLCanvasElement): Promise<void> {
     this.scene = new Scene(this.engine);
-    this.HUD = new HUD(this.scene);
+
     this.pointerInteractor = new PointerInteractor(this.scene);
     this.augmentedReality = new AugmentedReality(this.scene);
     const xr = await this.augmentedReality.createXRExprerienceAsync();
 
     this.camera = new WebXRCamera('camera1', this.scene, xr.baseExperience.sessionManager);
     this.camera.attachControl(canvas, true);
+    this.HUD = new HUD(this.scene, this.pointerInteractor, this.camera);
+    this.HUD.display();
   }
 
   private renderLoop(): void {
