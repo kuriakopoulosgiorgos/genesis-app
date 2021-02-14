@@ -1,37 +1,42 @@
 import { PointerInteractor } from './../controls/pointer-interactor';
 import { Scene, WebXRCamera, TransformNode } from '@babylonjs/core';
 import { CylinderPanel, GUI3DManager, HolographicButton } from '@babylonjs/gui';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class HUD {
 
   private panel: CylinderPanel | undefined;
   private panelSpawned = false;
-  constructor(private scene: Scene, private pointerInteractor: PointerInteractor, private camera: WebXRCamera) { }
+
+
+  constructor(private pointerInteractor: PointerInteractor) { }
 
 
   /**
    * Displays the HUD
    */
-  display(): void {
+  display(scene: Scene, camera: WebXRCamera): void {
 
+    this.pointerInteractor.interactWithScene(scene);
     // Create the 3D UI manager
-    let manager = new GUI3DManager(this.scene);
+    let manager = new GUI3DManager(scene);
 
     this.pointerInteractor.onDoubleTap$.subscribe(() => {
       if (this.panelSpawned) {
         manager.removeControl(this.panel);
         this.panelSpawned = false;
       } else {
-        this.createItemsPanel(manager);
+        this.createItemsPanel(manager, camera);
         this.panelSpawned = true;
       }
     });
   }
 
-  async createItemsPanel(manager: GUI3DManager): Promise<void> {
+  async createItemsPanel(manager: GUI3DManager, camera: WebXRCamera): Promise<void> {
     let node = new TransformNode('panel');
-    node.rotationQuaternion = this.camera.rotationQuaternion.clone();
-    node.position = this.camera.getFrontPosition(5);
+    node.rotationQuaternion = camera.rotationQuaternion.clone();
+    node.position = camera.getFrontPosition(5);
 
     this.panel = new CylinderPanel();
     this.panel.margin = 0.2;

@@ -1,4 +1,3 @@
-import { PointerInteractor } from './../controls/pointer-interactor';
 import { HUD } from './hud';
 import { AugmentedReality } from './augmented-reality';
 import { Renderable } from './../renderable';
@@ -7,12 +6,14 @@ import {
   Scene,
   WebXRCamera,
 } from '@babylonjs/core';
-import { ElementRef } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import * as earcut from 'earcut';
 (window as any).earcut = earcut;
 
+@Injectable()
 export class GraphicsEngine {
+
   private engine: Engine;
   private canvas: ElementRef<HTMLCanvasElement>;
 
@@ -28,14 +29,11 @@ export class GraphicsEngine {
   private isFullScreen = new BehaviorSubject(false);
   isFullScreen$ = this.isFullScreen.asObservable();
 
-  private pointerInteractor: PointerInteractor;
-  private HUD: HUD;
-  private augmentedReality: AugmentedReality;
 
-  constructor(private renderable: Renderable) { }
+  constructor(private augmentedReality: AugmentedReality, private HUD: HUD) { }
 
-  start(): void {
-    this.canvas = this.renderable.getRenderCanvas();
+  start(renderable: Renderable): void {
+    this.canvas = renderable.getRenderCanvas();
     this.engine = new Engine(this.canvas.nativeElement, true);
     this.initialWidth = this.canvas.nativeElement.width;
     this.initialHeight = this.canvas.nativeElement.height;
@@ -61,14 +59,11 @@ export class GraphicsEngine {
   private async createScene(canvas: HTMLCanvasElement): Promise<void> {
     this.scene = new Scene(this.engine);
 
-    this.pointerInteractor = new PointerInteractor(this.scene);
-    this.augmentedReality = new AugmentedReality(this.scene);
-    const xr = await this.augmentedReality.createXRExprerienceAsync();
+    const xr = await this.augmentedReality.createXRExprerienceAsync(this.scene);
 
     this.camera = new WebXRCamera('camera1', this.scene, xr.baseExperience.sessionManager);
     this.camera.attachControl(canvas, true);
-    this.HUD = new HUD(this.scene, this.pointerInteractor, this.camera);
-    this.HUD.display();
+    this.HUD.display(this.scene, this.camera);
   }
 
   private renderLoop(): void {

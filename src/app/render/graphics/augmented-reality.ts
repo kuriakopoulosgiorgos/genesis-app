@@ -1,17 +1,19 @@
+import { Injectable } from '@angular/core';
 import { Scene } from '@babylonjs/core'
 import { WebXRDefaultExperience, WebXRAnchorSystem } from "@babylonjs/core";
 
+@Injectable()
 export class AugmentedReality {
 
-  constructor(private scene: Scene) { }
+  constructor() { }
 
 
   /**
    * creates the augmented reality experience
    */
-  async createXRExprerienceAsync(): Promise<WebXRDefaultExperience> {
+  async createXRExprerienceAsync(scene: Scene): Promise<WebXRDefaultExperience> {
 
-    const xr = this.scene.createDefaultXRExperienceAsync({
+    const xr = scene.createDefaultXRExperienceAsync({
       uiOptions: {
         sessionMode: 'immersive-ar',
         referenceSpaceType: 'unbounded'
