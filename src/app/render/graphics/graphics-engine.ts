@@ -3,7 +3,9 @@ import { AugmentedReality } from './augmented-reality';
 import { Renderable } from './../renderable';
 import {
   Engine,
+  HemisphericLight,
   Scene,
+  Vector3,
   WebXRCamera,
 } from '@babylonjs/core';
 import { ElementRef, Injectable } from '@angular/core';
@@ -59,6 +61,10 @@ export class GraphicsEngine {
   private async createScene(canvas: HTMLCanvasElement): Promise<void> {
     this.scene = new Scene(this.engine);
 
+    let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
+
+    light.intensity = 1.5;
+
     const xr = await this.augmentedReality.createXRExprerienceAsync(this.scene);
 
     this.camera = new WebXRCamera('camera1', this.scene, xr.baseExperience.sessionManager);
@@ -68,7 +74,6 @@ export class GraphicsEngine {
 
   private renderLoop(): void {
     this.scene.render();
-
     this.fpsCount.next(this.engine.getFps());
   }
 }
