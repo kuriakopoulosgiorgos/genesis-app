@@ -1,7 +1,7 @@
 package gr.uth.resource;
 
 import gr.uth.models.Product;
-import gr.uth.repositories.ProductRepository;
+import gr.uth.repositories.ProductRepositoryImpl;
 import gr.uth.resources.ProductResource;
 import gr.uth.services.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class ProductResourceTest {
 
     @Mock
-    private ProductRepository productRepository;
+    private ProductRepositoryImpl productRepository;
 
     @InjectMocks
     private ProductServiceImpl productService;

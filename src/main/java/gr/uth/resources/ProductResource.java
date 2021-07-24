@@ -4,6 +4,7 @@ import gr.uth.models.Product;
 import gr.uth.services.ProductService;
 import io.smallrye.mutiny.Uni;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.*;
@@ -14,7 +15,8 @@ import java.util.List;
 @Path("/products")
 public class ProductResource {
 
-    private final ProductService productService;
+    @Inject
+    ProductService productService;
 
     public ProductResource(ProductService productService) {
         this.productService = productService;
@@ -34,7 +36,7 @@ public class ProductResource {
     }
 
     @GET
-    @Path(value = "/{code}")
+    @Path(value = "/{id}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     public Uni<Product> findById(String id) {

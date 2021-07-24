@@ -1,7 +1,7 @@
 package gr.uth.services;
 
 import gr.uth.models.Product;
-import gr.uth.repositories.ProductRepository;
+import gr.uth.repositories.ProductRepositoryImpl;
 import io.smallrye.mutiny.Uni;
 import org.bson.types.ObjectId;
 
@@ -13,9 +13,9 @@ import java.util.Objects;
 @ApplicationScoped
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductRepository productRepository;
+    final ProductRepositoryImpl productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepositoryImpl productRepository) {
         this.productRepository = productRepository;
     }
 
