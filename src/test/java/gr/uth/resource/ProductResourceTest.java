@@ -4,15 +4,23 @@ import gr.uth.models.Product;
 import gr.uth.repositories.ProductRepositoryImpl;
 import gr.uth.resources.ProductResource;
 import gr.uth.services.ProductServiceImpl;
+import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import test.BaseTest;
+import test.TestUtil;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ProductResourceTest {
+public class ProductResourceTest extends BaseTest {
+
+    private static final String BASE_PATH = "ProductResource/";
+    private static final String REQUEST_PATH = BASE_PATH + "request/";
+    private static final String RESPONSE_PATH = BASE_PATH + "response/";
 
     @Mock
     private ProductRepositoryImpl productRepository;
@@ -28,15 +36,22 @@ public class ProductResourceTest {
     }
 
     @Test
-    public void create() {
+    public void create_noModel() {
+        // GIVEN a user is creating a product
+        // AND the product is valid
+        // AND the product has no Model
+        final var testId = "000000000000000000000001";
+        var product = fromJson(REQUEST_PATH + "create_noModel.json", Product.class);
 
-        Product product = new Product();
-        product.name = "name";
-        product.description = "description";
-        product.price = 1.0;
+        Mockito.when(productRepository.persist(product))
+                .thenReturn(Uni.createFrom().item(TestUtil.entityWithId(testId, product)));
 
-        productResource.create(product);
+        var actual = productResource.create(product)
+                .subscribe()
+                .withSubscriber(UniAssertSubscriber.create())
+                .assertCompleted().getItem();
 
-        Mockito.verify(productRepository).persist(product);
+        // THEN the response should contain the provided product along with an id
+        assertEquals(RESPONSE_PATH + "create_noModel.json", actual);
     }
 }
