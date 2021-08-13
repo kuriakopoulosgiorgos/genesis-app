@@ -1,12 +1,11 @@
 package test;
 
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
-import org.bson.types.ObjectId;
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;
 
 public class TestUtil {
 
-    public static <T extends ReactivePanacheMongoEntity> T entityWithId(String id, T entity) {
-        entity.id = new ObjectId(id);
+    public static <T extends PanacheEntity> T entityWithId(Long id, T entity) {
+        entity.id = id;
         return entity;
     }
 }

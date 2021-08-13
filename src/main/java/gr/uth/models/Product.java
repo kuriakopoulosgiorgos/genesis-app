@@ -1,14 +1,17 @@
 package gr.uth.models;
 
-import io.quarkus.mongodb.panache.MongoEntity;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@MongoEntity(database = "products")
-public class Product extends ReactivePanacheMongoEntity {
+@Table(name = "Products")
+@Entity
+public class Product extends PanacheEntity {
 
     @NotBlank
     public String name;
@@ -20,5 +23,6 @@ public class Product extends ReactivePanacheMongoEntity {
     public double price;
 
     @Valid
+    @OneToOne
     public Model model;
 }

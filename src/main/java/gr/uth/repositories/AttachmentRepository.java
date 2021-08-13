@@ -1,12 +1,6 @@
 package gr.uth.repositories;
 
-import com.mongodb.client.gridfs.GridFSDownloadStream;
-import gr.uth.dto.AttachmentFormData;
 import gr.uth.models.Attachment;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoRepository;
+import io.quarkus.hibernate.reactive.panache.PanacheRepository;
 
-public interface AttachmentRepository extends ReactivePanacheMongoRepository<Attachment> {
-
-    Attachment uploadAttachment(AttachmentFormData attachmentFormData);
-    GridFSDownloadStream retrieveFile(String fileReference);
-}
+public interface AttachmentRepository extends PanacheRepository<Attachment> {}

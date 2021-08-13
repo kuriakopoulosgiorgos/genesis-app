@@ -3,7 +3,6 @@ package gr.uth.services;
 import gr.uth.models.Product;
 import gr.uth.repositories.ProductRepositoryImpl;
 import io.smallrye.mutiny.Uni;
-import org.bson.types.ObjectId;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
@@ -33,12 +32,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Uni<Product> findById(String id) {
-        return productRepository.findById(new ObjectId(id));
+    public Uni<Product> findById(Long id) {
+        return productRepository.findById(id);
     }
 
     @Override
-    public Uni<Boolean> deleteById(String id) {
-        return productRepository.deleteById(new ObjectId(id));
+    public Uni<Boolean> deleteById(Long id) {
+        return productRepository.deleteById(id);
     }
 }

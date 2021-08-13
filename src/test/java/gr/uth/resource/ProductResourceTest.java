@@ -40,7 +40,7 @@ public class ProductResourceTest extends BaseTest {
         // GIVEN a user is creating a product
         // AND the product is valid
         // AND the product has no Model
-        final var testId = "000000000000000000000001";
+        final var testId = 1L;
         var product = fromJson(REQUEST_PATH + "create_noModel.json", Product.class);
 
         Mockito.when(productRepository.persist(product))

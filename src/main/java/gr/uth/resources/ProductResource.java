@@ -39,7 +39,7 @@ public class ProductResource {
     @Path(value = "/{id}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<Product> findById(String id) {
+    public Uni<Product> findById(Long id) {
         return productService.findById(id);
     }
 
@@ -47,7 +47,7 @@ public class ProductResource {
     @Path(value = "/{id}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<Response> deleteById(@NotBlank String id) {
+    public Uni<Response> deleteById(@NotBlank Long id) {
 
         return productService.deleteById(id).map(isDeleted ->
                         isDeleted ? Response.status(Response.Status.NO_CONTENT).build()

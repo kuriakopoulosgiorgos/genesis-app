@@ -1,7 +1,6 @@
 package gr.uth.repositories;
 
 import gr.uth.models.Product;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoRepository;
+import io.quarkus.hibernate.reactive.panache.PanacheRepository;
 
-public interface ProductRepository extends ReactivePanacheMongoRepository<Product> {
-}
+public interface ProductRepository extends PanacheRepository<Product> {}

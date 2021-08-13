@@ -1,11 +1,14 @@
 package gr.uth.models;
 
-import io.quarkus.mongodb.panache.MongoEntity;
-import io.quarkus.mongodb.panache.reactive.ReactivePanacheMongoEntity;
+import io.quarkus.hibernate.reactive.panache.PanacheEntity;
 
-@MongoEntity
-public class Attachment extends ReactivePanacheMongoEntity {
+import javax.persistence.*;
 
+@Table(name = "Attachments")
+@Entity
+public class Attachment extends PanacheEntity {
+
+    @Column(unique = true)
     public String reference;
     public String name;
     public String description;

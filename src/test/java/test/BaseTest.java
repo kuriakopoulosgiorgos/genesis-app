@@ -1,14 +1,9 @@
 package test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import gr.uth.configurations.ObjectMapperCustomizerConfiguration;
-import io.quarkus.mongodb.panache.jackson.ObjectIdDeserializer;
-import io.quarkus.mongodb.panache.jackson.ObjectIdSerializer;
 import io.restassured.path.json.mapper.factory.DefaultJackson2ObjectMapperFactory;
-import org.bson.types.ObjectId;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -23,10 +18,6 @@ public class BaseTest {
 
     public BaseTest() {
         this.objectMapper = new DefaultJackson2ObjectMapperFactory().create(null, null);
-        SimpleModule simpleModule = new SimpleModule("ObjectIdSerializer", new Version(1, 0, 0, null, null, null));
-        simpleModule.addSerializer(ObjectId.class, new ObjectIdSerializer());
-        simpleModule.addDeserializer(ObjectId.class, new ObjectIdDeserializer());
-        this.objectMapper.registerModule(simpleModule);
         ObjectMapperCustomizerConfiguration objectMapperCustomizerConfiguration = new ObjectMapperCustomizerConfiguration();
         objectMapperCustomizerConfiguration.customize(objectMapper);
     }
