@@ -10,8 +10,11 @@ public class Attachment extends PanacheEntity {
 
     @Column(unique = true)
     public String reference;
+    @Column(nullable = false)
     public String name;
     public String description;
+    @Column(nullable = false)
     public Long size;
+    @Column(nullable = false)
     public String contentType;
 }

@@ -1,7 +1,12 @@
 package gr.uth.services;
 
+import gr.uth.exceptions.ExceptionBuilder;
+import gr.uth.exceptions.I18NMessage;
+import gr.uth.exceptions.ValidationException;
+import gr.uth.interceptors.Transactional;
 import gr.uth.models.Product;
-import gr.uth.repositories.ProductRepositoryImpl;
+import gr.uth.repositories.AttachmentRepository;
+import gr.uth.repositories.ProductRepository;
 import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,10 +17,12 @@ import java.util.Objects;
 @ApplicationScoped
 public class ProductServiceImpl implements ProductService {
 
-    final ProductRepositoryImpl productRepository;
+    final ProductRepository productRepository;
+    final AttachmentRepository attachmentRepository;
 
-    public ProductServiceImpl(ProductRepositoryImpl productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, AttachmentRepository attachmentRepository) {
         this.productRepository = productRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
     @Override
@@ -23,10 +30,21 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.listAll();
     }
 
+    @Transactional
     @Override
-    public Uni<Product> create(Product product) {
-        if(Objects.nonNull(product.model)) {
-            product.model.uploadDate = LocalDateTime.now();
+    public Uni<Product> create(Product product) throws ValidationException {
+        var model = product.model;
+        if(Objects.nonNull(model)) {
+            var attachmentReference = model.attachment.reference;
+            return  attachmentRepository.find("reference", attachmentReference).firstResult()
+                    .onItem()
+                    .ifNull().failWith(ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND))
+                    .onItem()
+                    .transformToUni(attachment -> {
+                        model.uploadDate = LocalDateTime.now();
+                        model.attachment = attachment;
+                        return productRepository.persist(product);
+                    });
         }
         return productRepository.persist(product);
     }
@@ -36,6 +54,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id);
     }
 
+    @Transactional
     @Override
     public Uni<Boolean> deleteById(Long id) {
         return productRepository.deleteById(id);
