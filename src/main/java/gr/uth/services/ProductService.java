@@ -10,6 +10,6 @@ public interface ProductService {
 
     Uni<List<Product>> findAll();
     Uni<Product> create(@Valid Product product);
-    Uni<Product> findById(String id);
-    Uni<Boolean> deleteById(String id);
+    Uni<Product> findById(Long id);
+    Uni<Boolean> deleteById(Long id);
 }
