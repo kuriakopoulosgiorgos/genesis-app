@@ -1,0 +1,11 @@
+{
+  "name": "name",
+  "description": "description",
+  "price": 1.0,
+  "model": {
+    "name": "3D couch",
+    "attachment": {
+      "reference": "reference"
+    }
+  }
+}

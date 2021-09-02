@@ -2,6 +2,7 @@ package gr.uth.models;
 
 import io.quarkus.hibernate.reactive.panache.PanacheEntity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -23,6 +24,6 @@ public class Product extends PanacheEntity {
     public double price;
 
     @Valid
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     public Model model;
 }
