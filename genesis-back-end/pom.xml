@@ -13,6 +13,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>gr.uth</groupId>
+            <artifactId>genesis-front-end</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-reactive-panache</artifactId>
         </dependency>

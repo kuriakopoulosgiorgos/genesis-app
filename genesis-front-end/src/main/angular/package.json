@@ -5,8 +5,9 @@
     "ng": "ng",
     "start": "concurrently --kill-others \"npm run mock:server\" \"npm run start:proxy\"",
     "mock:server": "nodemon mock-server/server.js --watch mock-server/*",
-    "start:proxy": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --ssl --ssl-key ~/Documents/localhost.key  --ssl-cert ~/Documents/localhost.crt",
+    "start:proxy": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --ssl --ssl-key ../../../../genesis-back-end/src/main/resources/dev-ssl-certificate/key.pem  --ssl-cert ../../../../genesis-back-end/src/main/resources/dev-ssl-certificate/cert.pem",
     "build": "ng build",
+    "build-prod": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
