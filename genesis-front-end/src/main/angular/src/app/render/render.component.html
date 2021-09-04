@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="row">
+    <canvas #canvas class="col-12 mt-4 canvas"></canvas>
+  </div>
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">Frames Per second : {{ fps }}</h1>
+    </div>
+  </div>
+</div>
+
+<ul *ngIf="products?.length > 0">
+  <li *ngFor="let product of products">
+    {{ product.name }}
+  </li>
+</ul>
+
