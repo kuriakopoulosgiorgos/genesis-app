@@ -1,4 +1,4 @@
-import { ProductService } from './../product.service';
+import { ProductService } from './../api/services/product.service';
 import { Renderable } from './renderable';
 import { GraphicsEngine } from './graphics/graphics-engine';
 import {
@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { Product } from '../shared/models/product-model';
+import { Product } from '../api/models/product';
 
 @Component({
   selector: 'app-render',
@@ -42,7 +42,7 @@ export class RenderComponent implements OnInit, OnDestroy, Renderable {
     )
       .subscribe(isFullScreen => this.isFullScreen = isFullScreen);
 
-    this.productService.getProducts().subscribe(products => this.products = products);
+    this.productService.findAll().subscribe(products => this.products = products);
   }
 
   ngAfterViewInit(): void {

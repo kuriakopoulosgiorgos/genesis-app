@@ -3,11 +3,10 @@ import { HUD } from './graphics/hud';
 import { PointerInteractor } from './controls/pointer-interactor';
 import { GraphicsEngine } from './graphics/graphics-engine';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { RenderRoutingModule } from './render-routing.module';
 import { RenderComponent } from './render.component';
-
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [RenderComponent],

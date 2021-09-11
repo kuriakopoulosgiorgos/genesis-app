@@ -7,6 +7,12 @@ import gr.uth.services.AttachmentService;
 import gr.uth.services.BinaryFileService;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.MultipartForm;
 
 import javax.inject.Inject;
@@ -17,6 +23,7 @@ import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
 
 @Path("/attachments")
+@Tag(name = "Attachment")
 public class AttachmentResource {
 
     @Inject
@@ -33,7 +40,13 @@ public class AttachmentResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<Attachment> uploadAttachment(@MultipartForm AttachmentFormData attachmentFormData) {
+    public Uni<Attachment> uploadAttachment(
+            @RequestBody(
+                    description = "The attachment binary data",
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA, schema = @Schema(format = "binary")),
+                    required = true
+            )
+            @MultipartForm AttachmentFormData attachmentFormData) {
         return attachmentService.uploadAttachment(attachmentFormData);
     }
 
@@ -41,6 +54,17 @@ public class AttachmentResource {
     @Path("/{fileReference}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "200",
+                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA, schema = @Schema(format = "binary"))
+            ),
+            @APIResponse(
+                    responseCode = "400",
+                    description = "No Attachment found",
+                    content = @Content(mediaType = MediaType.TEXT_PLAIN)
+            ),
+    })
     public Uni<Response> retrieveFile(String fileReference) {
 
         return attachmentService

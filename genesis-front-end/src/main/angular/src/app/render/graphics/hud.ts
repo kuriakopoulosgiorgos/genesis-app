@@ -1,5 +1,5 @@
-import { Product } from './../../shared/models/product-model';
-import { ProductService } from './../../product.service';
+import { Product } from './../../api/models/product';
+import { ProductService } from './../../api/services/product.service';
 import { PointerInteractor } from './../controls/pointer-interactor';
 import { Axis, Scene, WebXRCamera, TransformNode, Observer, StandardMaterial, Texture, MeshBuilder, Mesh } from '@babylonjs/core';
 import { GUI3DManager, MeshButton3D, SpherePanel } from '@babylonjs/gui';
@@ -14,7 +14,7 @@ export class HUD {
   private sceneObserver: Observer<Scene>;
 
   constructor(private pointerInteractor: PointerInteractor, private productService: ProductService) {
-    this.productService.getProducts().subscribe(products => {
+    this.productService.findAll().subscribe(products => {
       this.products = products;
     })
   }
@@ -75,7 +75,7 @@ export class HUD {
   private createButton(product: Product, scene: Scene): void {
 
     const mat = new StandardMaterial(`${product.name}-mat`, scene);
-    mat.diffuseTexture = new Texture(product.imageURL, scene);
+    mat.diffuseTexture = new Texture(null, scene);
 
     const plane = MeshBuilder.CreatePlane(`${product.name}-btn`, { sideOrientation: Mesh.DOUBLESIDE });
     plane.material = mat;

@@ -1,52 +1,21 @@
 {
   "products": [
     {
-      "name": "FUTURA office chair",
-      "category": "Office",
-      "description": "A beautiful and comfortable chair for your office",
-      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg42MBpvENq8nIb3i2de-guVxgS_DWZNGG5Rg82lTCS4Bx_9rKOjfjjnNvaDAuQsLsrsX00gk&usqp=CAc"
-    },
-    {
-      "name": "BlitzWolf office Chair 1",
-      "category": "Office",
-      "description": "An ergonomic office chair design",
-      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQguvIspi5dFsvZQKCyoosrpegwZklLmppf3R7E9JqKBZ8f17H7wTcbjf0LCHspklzeT2SC1Vg&usqp=CAc"
-    },
-    {
-      "name": "BlitzWolf office Chair 2",
-      "category": "Office",
-      "description": "An ergonomic office chair design",
-      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWRY-otp8UchpkKjCblzy_7LE8iyNabbRFsqZAxsd-fqKQoWCyZV3x1OZKG8OdFdVortGSPj5y&usqp=CAc"
-    },
-    {
-      "name": "BlitzWolf office Chair 3",
-      "category": "Office",
-      "description": "An ergonomic office chair design",
-      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0WvlRDTcqymjyMaKuUZdmv4X1o77cXeS4Iai5646wLxhGQq5wfq3M1nc15IQ7mzBBEFEYebg&usqp=CAc"
-    },
-    {
-      "name": "BlitzWolf office Chair 4",
-      "category": "Office",
-      "description": "An ergonomic office chair design",
-      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8o4pi06-AVK4QNL3IfaTETMz1wiYHN_ZtRe6CoVXm1OTyAB5md9KQIn7aFSD9xV0weK_3VaM&usqp=CAc"
-    },
-    {
-      "name": "BlitzWolf office Chair 5",
-      "category": "Office",
-      "description": "An ergonomic office chair design",
-      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB3KI_r-RQ__rbT2m4CYwndTViuAgkXoaJNA&usqp=CAU"
-    },
-    {
-      "name": "BlitzWolf office Chair 6",
-      "category": "Office",
-      "description": "An ergonomic office chair design",
-      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRabZGEZML7JQHlzbUrMiCKYm8UGziKRWL-6w&usqp=CAU"
-    },
-    {
-      "name": "BlitzWolf office Chair 7",
-      "category": "Office",
-      "description": "An ergonomic office chair design",
-      "imageURL": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvF5Alx1tYgsk1SW_KT8u9pe3qO_LXzpMe9g&usqp=CAU"
+      "id": 1,
+      "name": "name",
+      "description": "description",
+      "price": 1.0,
+      "model": {
+        "name": "3D couch",
+        "uploadDate": "2021-08-15T00:00:00.0000000",
+        "attachment": {
+          "reference": "reference",
+          "name": "test name",
+          "description": "test description",
+          "size": 100,
+          "contentType": "Text/plain"
+        }
+      }
     }
   ]
 }
