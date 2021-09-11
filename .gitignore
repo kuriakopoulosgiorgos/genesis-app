@@ -39,4 +39,4 @@ nb-configuration.xml
 .env
 
 # Angular distribution
-genesis-back-end/src/main/resources/META-INF/resources/**
+src/main/resources/META-INF/resources/**
