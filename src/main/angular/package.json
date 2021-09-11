@@ -2,11 +2,11 @@
   "name": "genesis",
   "version": "0.0.0",
   "scripts": {
-    "generate:schema": "ng-openapi-gen --input ../../../../genesis-back-end/target/generated/openapi.json --output src/app/api",
+    "generate:schema": "ng-openapi-gen --input ../../../target/generated/openapi.json --output src/app/api",
     "ng": "ng",
     "start": "concurrently --kill-others \"npm run mock:server\" \"npm run start:proxy\"",
     "mock:server": "nodemon mock-server/server.js --watch mock-server/*",
-    "start:proxy": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --ssl --ssl-key ../../../../genesis-back-end/src/main/resources/dev-ssl-certificate/key.pem  --ssl-cert ../../../../genesis-back-end/src/main/resources/dev-ssl-certificate/cert.pem",
+    "start:proxy": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --ssl --ssl-key ../resources/dev-ssl-certificate/key.pem  --ssl-cert ../resources/dev-ssl-certificate/cert.pem",
     "build": "ng build",
     "build-prod": "npm run generate:schema && ng build --prod",
     "test": "ng test",
