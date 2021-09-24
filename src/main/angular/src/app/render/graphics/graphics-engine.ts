@@ -1,13 +1,7 @@
-import { HUD } from './hud';
-import { AugmentedReality } from './augmented-reality';
 import { Renderable } from './../renderable';
-import {
-  Engine,
-  HemisphericLight,
-  Scene,
-  Vector3,
-  WebXRCamera,
-} from '@babylonjs/core';
+import 'babylonjs';
+import 'babylonjs-gui';
+import 'babylonjs-loaders';
 import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import * as earcut from 'earcut';
@@ -16,27 +10,21 @@ import * as earcut from 'earcut';
 @Injectable()
 export class GraphicsEngine {
 
-  private engine: Engine;
+  private engine: BABYLON.Engine;
   private canvas: ElementRef<HTMLCanvasElement>;
 
   private initialWidth: number;
   private initialHeight: number;
-
-  private scene: Scene;
-  private camera: WebXRCamera;
+  private scene: BABYLON.Scene;
 
   private fpsCount = new BehaviorSubject(0);
   fpsCount$ = this.fpsCount.asObservable();
 
-  private isFullScreen = new BehaviorSubject(false);
-  isFullScreen$ = this.isFullScreen.asObservable();
+  constructor() { }
 
-
-  constructor(private augmentedReality: AugmentedReality, private HUD: HUD) { }
-
-  start(renderable: Renderable): void {
+  start(renderable: Renderable, modelRootURL: string, model: string): void {
     this.canvas = renderable.getRenderCanvas();
-    this.engine = new Engine(this.canvas.nativeElement, true);
+    this.engine = new BABYLON.Engine(this.canvas.nativeElement, true);
     this.initialWidth = this.canvas.nativeElement.width;
     this.initialHeight = this.canvas.nativeElement.height;
     window.addEventListener('resize', () => {
@@ -44,7 +32,6 @@ export class GraphicsEngine {
     });
 
     window.onresize = (_e: any) => {
-      this.isFullScreen.next(this.engine.isFullscreen);
       if (!this.engine.isFullscreen) {
         this.canvas.nativeElement.width = this.initialWidth;
         this.canvas.nativeElement.height = this.initialHeight;
@@ -53,23 +40,31 @@ export class GraphicsEngine {
     };
 
     // creating minimal scene
-    this.createScene(this.canvas.nativeElement);
+    this.scene = this.createScene(this.canvas.nativeElement, modelRootURL, model);
     // running babylonJS
     this.engine.runRenderLoop(() => this.renderLoop());
   }
 
-  private async createScene(canvas: HTMLCanvasElement): Promise<void> {
-    this.scene = new Scene(this.engine);
+  fullScreen(): void {
+    this.engine.enterFullscreen(false);
+  }
 
-    let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
+  private createScene(canvas: HTMLCanvasElement, modelRootURL: string, model: string): BABYLON.Scene {
 
-    light.intensity = 1.5;
+    var scene = new BABYLON.Scene(this.engine);
+    scene.clearColor = new BABYLON.Color4(1, 1, 1);
+    var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+    var camera = new BABYLON.ArcRotateCamera("cam", Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero(), scene);
 
-    const xr = await this.augmentedReality.createXRExprerienceAsync(this.scene);
+    camera.wheelDeltaPercentage = 0.01;
+    camera.attachControl(canvas, true);
 
-    this.camera = new WebXRCamera('camera1', this.scene, xr.baseExperience.sessionManager);
-    this.camera.attachControl(canvas, true);
-    this.HUD.display(this.scene, this.camera);
+    BABYLON.SceneLoader.ImportMesh("", modelRootURL, model, scene, (meshes) => {
+      camera.zoomOnFactor = Math.PI / 2;
+      camera.zoomOn(meshes);
+    });
+
+    return scene;
   }
 
   private renderLoop(): void {

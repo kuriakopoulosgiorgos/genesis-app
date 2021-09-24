@@ -1,4 +1,6 @@
+import { environment } from 'src/environments/environment';
 import { ProductService } from './../api/services/product.service';
+import { Utils } from '../shared/utils';
 import { Renderable } from './renderable';
 import { GraphicsEngine } from './graphics/graphics-engine';
 import {
@@ -23,35 +25,40 @@ export class RenderComponent implements OnInit, OnDestroy, Renderable {
   private destroy = new Subject();
 
   fps: string = '';
-  isFullScreen: boolean;
 
   products: Product[];
 
   constructor(private graphicsEngine: GraphicsEngine, private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.graphicsEngine.start(this);
 
-    this.graphicsEngine.fpsCount$.pipe(
-      takeUntil(this.destroy)
-    )
-      .subscribe(fps => this.fps = fps.toFixed(3));
+    this.productService.findAll().subscribe(products => {
+      this.products = products;
+      let productWithModel = this.products.find(product => product.model?.attachment);
+      if(productWithModel) {
 
-    this.graphicsEngine.isFullScreen$.pipe(
-      takeUntil(this.destroy)
-    )
-      .subscribe(isFullScreen => this.isFullScreen = isFullScreen);
+        let modelRoute = environment.api.attachments + '/' + Utils.omitFileName(productWithModel.model.attachment.reference) + '/';
+        let model = productWithModel.model.attachment.name;
+        this.graphicsEngine.start(this, modelRoute, model);
 
-    this.productService.findAll().subscribe(products => this.products = products);
+        this.graphicsEngine.fpsCount$.pipe(
+          takeUntil(this.destroy)
+        )
+          .subscribe(fps => this.fps = fps.toFixed(3));
+      }
+    });
+
   }
 
   ngAfterViewInit(): void {
-
-
   }
 
   getRenderCanvas(): ElementRef<HTMLCanvasElement> {
     return this.canvas;
+  }
+
+  fullScreen(): void {
+    this.graphicsEngine.fullScreen();
   }
 
   ngOnDestroy(): void {
