@@ -1,0 +1,7 @@
+{
+  "file": "Αρχείο",
+  "frames-per-second": "Καρέ ανά δευτερόλεπτο : {{ fps }}",
+  "full-screen": "Πλήρης Οθόνη",
+  "validations-file-is-required": "Το αρχείο είναι υποχρεωτικό.",
+  "submit": "Υποβολή"
+}
