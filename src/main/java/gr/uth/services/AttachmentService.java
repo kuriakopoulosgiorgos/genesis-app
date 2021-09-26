@@ -4,8 +4,10 @@ import gr.uth.dto.AttachmentFormData;
 import gr.uth.models.Attachment;
 import io.smallrye.mutiny.Uni;
 
+import java.util.List;
+
 public interface AttachmentService {
 
-    Uni<Attachment> uploadAttachment(AttachmentFormData attachmentFormData);
+    Uni<List<Attachment>> uploadAttachments(AttachmentFormData attachmentFormData);
     Uni<Attachment> retrieveAttachmentByReference(String reference);
 }

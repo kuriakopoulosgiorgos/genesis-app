@@ -1,6 +1,7 @@
 package gr.uth.services;
 
 import gr.uth.dto.AttachmentFormData;
+import gr.uth.dto.AttachmentMetaData;
 import gr.uth.interceptors.Transactional;
 import gr.uth.models.Attachment;
 import gr.uth.models.BinaryFile;
@@ -11,7 +12,12 @@ import io.smallrye.mutiny.Uni;
 import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @ApplicationScoped
 public class AttachmentServiceImpl implements AttachmentService {
@@ -26,30 +32,57 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Transactional
     @Override
-    public Uni<Attachment> uploadAttachment(AttachmentFormData attachmentFormData) {
-        var attachment = new Attachment();
-        attachment.reference = UUID.randomUUID().toString();
-        attachment.name = attachmentFormData.file.fileName();
-        attachment.description = attachmentFormData.description;
-        attachment.size = attachmentFormData.file.size();
-        attachment.contentType  = attachmentFormData.file.contentType();
+    public Uni<List<Attachment>> uploadAttachments(AttachmentFormData attachmentFormData) {
 
-        BinaryFile binaryFile = new BinaryFile();
-        binaryFile.attachment = attachment;
+        List<Attachment> attachments = new ArrayList<>();
+        List<BinaryFile> binaryFiles = new ArrayList<>();
+        var attachmentsReference = UUID.randomUUID().toString();
+        for(int i = 0; i < attachmentFormData.file.size(); i++) {
+            AttachmentMetaData attachmentMetaData = attachmentFormData.attachmentMetaData.get("" + (i + 1));
+            String description = null;
+            if(Objects.nonNull(attachmentMetaData)) {
+                description = attachmentMetaData.description;
+            }
+            var fileUpload = attachmentFormData.file.get(i);
+            var attachment = new Attachment();
+            attachment.name = getFileName(fileUpload.fileName());
+            attachment.reference = attachmentsReference + "/" + fileUpload.fileName();
+            attachment.description = description;
+            attachment.size = fileUpload.size();
+            attachment.contentType  = fileUpload.contentType();
 
-        try {
-            binaryFile.data = Files.readAllBytes(attachmentFormData.file.uploadedFile());
-        } catch (IOException e) {
-            return Uni.createFrom().failure(e);
+            BinaryFile binaryFile = new BinaryFile();
+            binaryFile.attachment = attachment;
+
+            try {
+                binaryFile.data = Files.readAllBytes(fileUpload.uploadedFile());
+                attachments.add(attachment);
+                binaryFiles.add(binaryFile);
+            } catch (IOException e) {
+                return (Uni.createFrom().failure(e));
+            }
         }
-        return attachmentRepository.persist(attachment).onItem()
-                .transformToUni(savedAttachment -> binaryFileRepository.persist(binaryFile)
-                        .map((_binaryFile -> savedAttachment)));
+        List<Uni<Attachment>> attachmentsUnis = IntStream.range(0, attachments.size())
+                .mapToObj(i -> attachmentRepository.persist(attachments.get(i)).onItem()
+                        .transformToUni(savedAttachment -> binaryFileRepository.persist(binaryFiles.get(i))
+                                .map(_binaryFile -> savedAttachment))).collect(Collectors.toList());
+
+        return Uni.combine().all()
+                .unis(attachmentsUnis)
+                .combinedWith(Attachment.class, ArrayList::new);
     }
 
     @Transactional
     @Override
     public Uni<Attachment> retrieveAttachmentByReference(String reference) {
         return attachmentRepository.find("reference", reference).firstResult();
+    }
+
+    private String getFileName(String filePath) {
+        if(filePath.contains("/")) {
+            var split = filePath.split("/");
+            return split[split.length - 1];
+        }
+        return filePath;
     }
 }

@@ -7,6 +7,7 @@ import gr.uth.services.AttachmentService;
 import gr.uth.services.BinaryFileService;
 import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 @Path("/attachments")
 @Tag(name = "Attachment")
@@ -40,18 +42,21 @@ public class AttachmentResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<Attachment> uploadAttachment(
+    public Uni<List<Attachment>> uploadAttachments(
             @RequestBody(
                     description = "The attachment binary data",
-                    content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA, schema = @Schema(format = "binary")),
+                    content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA,
+                            schema = @Schema(type = SchemaType.OBJECT, implementation = AttachmentFormData.class, format = "binary")
+                    ),
                     required = true
             )
             @MultipartForm AttachmentFormData attachmentFormData) {
-        return attachmentService.uploadAttachment(attachmentFormData);
+        return attachmentService.uploadAttachments(attachmentFormData);
     }
 
     @Blocking
-    @Path("/{fileReference}")
+    @Path("{fileReference:.+}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @APIResponses({
