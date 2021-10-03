@@ -3,12 +3,12 @@
     <canvas #canvas class="col-12 mt-4 canvas"></canvas>
   </div>
   <div class="row justify-content-center">
-    <button class="btn btn-primary col-3" (click)="fullScreen()">Full Screen</button>
+    <button class="btn btn-primary col-3" (click)="fullScreen()">{{ 'full-screen' | translate }}</button>
   </div>
 
   <div class="jumbotron jumbotron-fluid">
     <div class="container">
-      <h1 class="display-4">Frames Per second : {{ fps }}</h1>
+      <h1 class="display-4">{{ 'frames-per-second' | translate: {fps: fps} }}</h1>
     </div>
   </div>
 </div>

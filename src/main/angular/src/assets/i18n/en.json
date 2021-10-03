@@ -1,0 +1,7 @@
+{
+  "file": "File",
+  "frames-per-second": "Frames Per second : {{ fps }}",
+  "full-screen": "Full screen",
+  "validations-file-is-required": "File is required.",
+  "submit": "Submit"
+}
