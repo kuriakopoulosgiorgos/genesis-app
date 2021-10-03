@@ -59,9 +59,11 @@ export class GraphicsEngine {
     camera.wheelDeltaPercentage = 0.01;
     camera.attachControl(canvas, true);
 
+    this.engine.displayLoadingUI();
     BABYLON.SceneLoader.ImportMesh("", modelRootURL, model, scene, (meshes) => {
       camera.zoomOnFactor = Math.PI / 2;
       camera.zoomOn(meshes);
+      this.engine.hideLoadingUI();
     });
 
     return scene;
