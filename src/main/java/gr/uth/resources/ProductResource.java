@@ -1,5 +1,8 @@
 package gr.uth.resources;
 
+import gr.uth.dto.Pageable;
+import gr.uth.dto.ProductSortByField;
+import gr.uth.dto.SortByDirection;
 import gr.uth.models.Product;
 import gr.uth.services.ProductService;
 import io.smallrye.mutiny.Uni;
@@ -11,11 +14,12 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/products")
 @Tag(name = "Product")
@@ -30,8 +34,13 @@ public class ProductResource {
 
     @GET
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<List<Product>> findAll() {
-        return productService.findAll();
+    public Uni<Pageable<Product>> findAll(
+            @QueryParam("sortByField") ProductSortByField sortByField,
+            @QueryParam("sortByDirection") @DefaultValue("asc") SortByDirection sortByDirection,
+            @QueryParam("page") @DefaultValue("1") @Min(1) int page,
+            @QueryParam("pageSize") @DefaultValue("25") @Min(1) @Max(50) int pageSize) {
+
+        return productService.findAll(sortByField, sortByDirection, page, pageSize);
     }
 
     @POST
