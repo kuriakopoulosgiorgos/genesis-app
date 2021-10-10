@@ -51,6 +51,9 @@ export class RenderComponent implements OnInit, OnDestroy, Renderable {
   }
 
   ngAfterViewInit(): void {
+    this.canvas.nativeElement.onwheel = (event) =>  {
+      event.preventDefault();
+    };
   }
 
   getRenderCanvas(): ElementRef<HTMLCanvasElement> {

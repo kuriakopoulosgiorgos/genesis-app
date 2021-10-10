@@ -1,20 +1,40 @@
-<div class="site-wrapper">
-  <div class="site-wrapper-inner">
-    <div class="cover-container">
-      <header class="masthead clearfix">
-        <div class="inner">
-          <h3 class="masthead-brand">Genesis</h3>
-          <nav class="nav nav-masthead">
-            <a class="nav-link active" href="#">Home</a>
-            <a class="nav-link" href="#">Features</a>
-            <a class="nav-link" href="#">Contact</a>
-          </nav>
-        </div>
-      </header>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Genesis</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-      <main role="main" class="inner cover">
-        <router-outlet></router-outlet>
-      </main>
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">{{ 'home-page' | translate }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">{{ 'about-page' | translate }}</a>
+      </li>
+      <li class="nav-item">
+        <form class="d-flex">
+          <button class="btn btn-outline-dark" type="submit">
+            <i class="bi-cart-fill me-1"></i>
+            Cart
+            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+          </button>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+<!-- Header-->
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">{{'shop-in-style' | translate }}</h1>
+      <p class="lead fw-normal text-white-50 mb-0">
+        {{ 'in-3-dimensions' | translate }}
+      </p>
     </div>
   </div>
-</div>
+</header>
+<main class="container">
+  <router-outlet></router-outlet>
+</main>

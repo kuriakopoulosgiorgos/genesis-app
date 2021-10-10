@@ -11,6 +11,11 @@ public class AttachmentTestUtil {
                 100L, "Text/plain");
     }
 
+    public static Attachment createAttachment(String reference, String contentType) {
+        return createAttachment(reference, "test name", "test description",
+                100L, contentType);
+    }
+
     public static Attachment createAttachment(String reference, String name, String description,
                                               Long size, String contentType) {
         var attachment = new Attachment();

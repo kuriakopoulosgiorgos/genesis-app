@@ -2,6 +2,14 @@
   "name": "name",
   "description": "description",
   "price": 1.0,
+  "photos": [
+    {
+      "reference": "photo reference 1"
+    },
+    {
+      "reference": "photo reference 2"
+    }
+  ],
   "model": {
     "name": "3D couch",
     "attachment": {

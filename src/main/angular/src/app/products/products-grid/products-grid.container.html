@@ -1,0 +1,16 @@
+<div *ngIf="loading" class="d-flex justify-content-center">
+  <div class="spinner-border" role="status">
+    <span class="sr-only"></span>
+  </div>
+</div>
+
+
+<app-products-grid-ui
+  [products]="products$ | async"
+  [page]="page"
+  [pageSize]="pageSize"
+  [totalCount]="totalCount"
+  (onPageChange)="changePage($event)"
+  (onPageSizeChange)="changePageSize($event)"
+  >
+</app-products-grid-ui>

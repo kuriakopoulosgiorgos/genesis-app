@@ -2,5 +2,21 @@
   "id": 1,
   "name": "name",
   "description": "description",
-  "price": 1.0
+  "price": 1.0,
+  "photos": [
+    {
+      "reference": "photo reference 1",
+      "name": "test name",
+      "description": "test description",
+      "size": 100,
+      "contentType": "image/png"
+    },
+    {
+      "reference": "photo reference 2",
+      "name": "test name",
+      "description": "test description",
+      "size": 100,
+      "contentType": "image/png"
+    }
+  ]
 }

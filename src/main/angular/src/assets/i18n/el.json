@@ -3,5 +3,12 @@
   "frames-per-second": "Καρέ ανά δευτερόλεπτο : {{ fps }}",
   "full-screen": "Πλήρης Οθόνη",
   "validations-file-is-required": "Το αρχείο είναι υποχρεωτικό.",
-  "submit": "Υποβολή"
+  "submit": "Υποβολή",
+  "items-per-page": "Στοιχεία ανά σελίδα",
+  "view-details": "Λεπτομέρειες",
+  "add-to-cart": "ΠΡΟΣΘΗΚΗ ΣΤΟ ΚΑΛΑΘΙ",
+  "shop-in-style": "Αγορές με στυλ!",
+  "in-3-dimensions": "Σε 3 διαστάσεις",
+  "home-page": "Αρχική σελίδα",
+  "about-page": "Σχετικά"
 }
