@@ -1,5 +1,8 @@
 package gr.uth.services;
 
+import gr.uth.dto.Pageable;
+import gr.uth.dto.ProductSortByField;
+import gr.uth.dto.SortByDirection;
 import gr.uth.exceptions.ExceptionBuilder;
 import gr.uth.exceptions.I18NMessage;
 import gr.uth.exceptions.ValidationException;
@@ -7,11 +10,12 @@ import gr.uth.interceptors.Transactional;
 import gr.uth.models.Product;
 import gr.uth.repositories.AttachmentRepository;
 import gr.uth.repositories.ProductRepository;
+import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
@@ -26,8 +30,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Uni<List<Product>> findAll() {
-        return productRepository.listAll();
+    @Transactional
+    public Uni<Pageable<Product>> findAll(ProductSortByField sortByField, SortByDirection sortByDirection,
+                                          int page, int pageSize) {
+        var sortByColumn = Objects.nonNull(sortByField) ? sortByField.name() : "id";
+        var sort = Sort.by(sortByColumn);
+        sort.direction(sortByDirection == SortByDirection.asc ? Sort.Direction.Ascending : Sort.Direction.Descending);
+        var query = productRepository.findAll(sort);
+        var count = query.count();
+        var products = query.page(Page.of(page - 1, pageSize)).list();
+        return Uni.combine().all().unis(count, products).asTuple()
+                .onItem().transform(results -> {
+                    var productPageable = new Pageable<Product>();
+                    productPageable.data = results.getItem2();
+                    productPageable.totalCount = results.getItem1();
+                    return productPageable;
+                });
     }
 
     @Transactional

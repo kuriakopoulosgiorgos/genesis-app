@@ -33,7 +33,7 @@ export class RenderComponent implements OnInit, OnDestroy, Renderable {
   ngOnInit(): void {
 
     this.productService.findAll().subscribe(products => {
-      this.products = products;
+      this.products = products.data;
       let productWithModel = this.products.find(product => product.model?.attachment);
       if(productWithModel) {
 
