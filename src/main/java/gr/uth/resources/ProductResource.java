@@ -7,7 +7,6 @@ import gr.uth.models.Product;
 import gr.uth.services.ProductService;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -16,7 +15,6 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -61,12 +59,12 @@ public class ProductResource {
     @DELETE
     @Path(value = "/{id}")
     @Consumes(value = MediaType.APPLICATION_JSON)
-    @Produces(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.TEXT_PLAIN)
     @APIResponses({
             @APIResponse(
                     responseCode = "201",
                     description = "Product deleted",
-                    content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema())
+                    content = @Content(mediaType = MediaType.TEXT_PLAIN)
             ),
             @APIResponse(
                     responseCode = "400",
@@ -74,7 +72,7 @@ public class ProductResource {
                     content = @Content(mediaType = MediaType.TEXT_PLAIN)
             ),
     })
-    public Uni<Response> deleteById(@NotBlank Long id) {
+    public Uni<Response> deleteById(Long id) {
 
         return productService.deleteById(id).map(isDeleted ->
                         isDeleted ? Response.status(Response.Status.NO_CONTENT).build()

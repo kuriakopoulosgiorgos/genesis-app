@@ -22,13 +22,12 @@ public class TransactionalInterceptor {
                     try {
                         return (Uni) context.proceed();
                     } catch (Exception e) {
-                        ExceptionWrapper exceptionWrapper = new ExceptionWrapper();
-                        exceptionWrapper.e = e;
+                        ExceptionWrapper exceptionWrapper = new ExceptionWrapper(e);
                         throw exceptionWrapper;
                     }
                 });
             } catch (ExceptionWrapper exceptionWrapper) {
-                throw exceptionWrapper.e;
+                throw exceptionWrapper;
             }
 
         }
@@ -36,6 +35,9 @@ public class TransactionalInterceptor {
     }
 
     private static class ExceptionWrapper extends RuntimeException {
-        Exception e;
+
+        ExceptionWrapper(Throwable t) {
+            super(t);
+        }
     }
 }

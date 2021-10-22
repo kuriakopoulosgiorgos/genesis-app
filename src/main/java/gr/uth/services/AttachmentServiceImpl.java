@@ -38,7 +38,8 @@ public class AttachmentServiceImpl implements AttachmentService {
         List<BinaryFile> binaryFiles = new ArrayList<>();
         var attachmentsReference = UUID.randomUUID().toString();
         for(int i = 0; i < attachmentFormData.file.size(); i++) {
-            AttachmentMetaData attachmentMetaData = attachmentFormData.attachmentMetaData.get("" + (i + 1));
+            AttachmentMetaData attachmentMetaData = Objects.nonNull(attachmentFormData.attachmentMetaData) ?
+                    attachmentFormData.attachmentMetaData.get("" + (i + 1)) : null;
             String description = null;
             if(Objects.nonNull(attachmentMetaData)) {
                 description = attachmentMetaData.description;

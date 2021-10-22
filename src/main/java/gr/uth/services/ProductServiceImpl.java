@@ -16,10 +16,16 @@ import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ProductServiceImpl implements ProductService {
+
+    private static final List<String> VALID_IMAGE_TYPES = List.of(
+            "image/png", "image/jpeg"
+    );
 
     final ProductRepository productRepository;
     final AttachmentRepository attachmentRepository;
@@ -52,19 +58,40 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Uni<Product> create(Product product) throws ValidationException {
         var model = product.model;
-        if(Objects.nonNull(model)) {
-            var attachmentReference = model.attachment.reference;
-            return  attachmentRepository.find("reference", attachmentReference).firstResult()
-                    .onItem()
-                    .ifNull().failWith(ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND))
-                    .onItem()
-                    .transformToUni(attachment -> {
-                        model.uploadDate = LocalDateTime.now();
-                        model.attachment = attachment;
-                        return productRepository.persist(product);
-                    });
-        }
-        return productRepository.persist(product);
+
+        var photoReferences = product.photos.stream()
+                .map((attachment -> attachment.reference))
+                .collect(Collectors.toList());
+
+       return attachmentRepository.find("reference", photoReferences)
+                .list().onItem().invoke((attachments) -> {
+
+                    if(attachments.size() != photoReferences.size()) {
+                        throw ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND);
+                    }
+
+                    if(attachments.stream().anyMatch(attachment -> !VALID_IMAGE_TYPES.contains(attachment.contentType))) {
+                        throw ExceptionBuilder.fromMessage(I18NMessage.INVALID_PHOTO_TYPE);
+                    }
+
+                    product.photos = attachments;
+                })
+               .onItem()
+               .transformToUni((_v) -> {
+                   if(Objects.nonNull(model)) {
+                       var attachmentReference = model.attachment.reference;
+                       return  attachmentRepository.find("reference", attachmentReference).firstResult()
+                               .onItem()
+                               .ifNull().failWith(ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND))
+                               .onItem()
+                               .transformToUni(attachment -> {
+                                   model.uploadDate = LocalDateTime.now();
+                                   model.attachment = attachment;
+                                   return productRepository.persist(product);
+                               });
+                   }
+                   return productRepository.persist(product);
+               });
     }
 
     @Override

@@ -3,5 +3,12 @@
   "frames-per-second": "Frames Per second : {{ fps }}",
   "full-screen": "Full screen",
   "validations-file-is-required": "File is required.",
-  "submit": "Submit"
+  "submit": "Submit",
+  "items-per-page": "Items per page",
+  "view-details": "View details",
+  "add-to-cart": "ADD TO CART",
+  "shop-in-style": "Shop in style!",
+  "in-3-dimensions": "In 3 dimensions",
+  "home-page": "Home page",
+  "about-page": "About"
 }
