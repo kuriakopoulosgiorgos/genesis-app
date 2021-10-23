@@ -29,6 +29,7 @@
     "babylonjs-gui": "^4.2.0",
     "babylonjs-loaders": "^4.2.0",
     "bootstrap": "^4.5.3",
+    "bootstrap-icons": "^1.6.1",
     "earcut": "^2.2.2",
     "jquery": "^3.5.1",
     "save": "^2.4.0",

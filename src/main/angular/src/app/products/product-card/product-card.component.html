@@ -1,22 +1,21 @@
 <div class='container-fluid'>
   <div class="card mx-auto">
     <div class="card-header">
-      <div class="row" ngbPopover="{{ titlePopover }}" triggers="mouseenter:mouseleave">
+      <div class="row" ngbPopover="{{ titlePopover | translate }}" triggers="mouseenter:mouseleave">
         <div class="col-8 text-center  text-nowrap">
-          <h5 class="font-weight-bold">{{ product.name | truncate:maxTitleSize }}</h5>
+          <h5 class="font-weight-bold">{{ product.name | translate | truncate:maxTitleSize }}</h5>
         </div>
         <div class="col-2 offset-2">
           <span class="badge badge-dark" *ngIf="product.model">3D</span>
         </div>
       </div>
 
-
     </div>
     <img class='mx-auto img-thumbnail' src="{{ thumbnail }}" width="auto" height="auto" />
-      <div class="card-body text-center mx-auto" ngbPopover="{{ descriptionPopover }}" triggers="mouseenter:mouseleave">
+      <div class="card-body text-center mx-auto" ngbPopover="{{ descriptionPopover | translate }}" triggers="mouseenter:mouseleave">
           <div class='cvp'>
-              <p class="card-text">{{ product.description | truncate:maxDescriptionSize }}</p>
-              <p class="card-text pt-2">{{ product.price }}€</p> <a href="#/render" class="btn details px-auto">{{ 'view-details' | translate }}</a><br /> <a href="#" class="btn cart px-auto">{{ 'add-to-cart' | translate }}</a>
+              <p class="card-text">{{ product.description | translate | truncate:maxDescriptionSize }}</p>
+              <p class="card-text pt-2">{{ product.price }}€</p> <a routerLink="details/{{ product.id }}" class="btn details px-auto">{{ 'view-details' | translate }}</a><br /> <a href="#" class="btn cart px-auto">{{ 'add-to-cart' | translate }}</a>
           </div>
       </div>
   </div>

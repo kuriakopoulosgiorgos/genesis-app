@@ -32,11 +32,9 @@ export class GraphicsEngine {
     });
 
     window.onresize = (_e: any) => {
-      if (!this.engine.isFullscreen) {
-        this.canvas.nativeElement.width = this.initialWidth;
-        this.canvas.nativeElement.height = this.initialHeight;
-        this.engine.resize();
-      }
+      this.canvas.nativeElement.width = this.initialWidth;
+      this.canvas.nativeElement.height = this.initialHeight;
+      this.engine.resize();
     };
 
     // creating minimal scene
@@ -56,7 +54,9 @@ export class GraphicsEngine {
     var light = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
     var camera = new BABYLON.ArcRotateCamera("cam", Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero(), scene);
 
+    camera.minZ = 0.1;
     camera.wheelDeltaPercentage = 0.01;
+    camera.pinchDeltaPercentage = 0.0005;
     camera.attachControl(canvas, true);
 
     this.engine.displayLoadingUI();
@@ -64,6 +64,7 @@ export class GraphicsEngine {
       camera.zoomOnFactor = Math.PI / 2;
       camera.zoomOn(meshes);
       this.engine.hideLoadingUI();
+      camera.maxZ = 50;
     });
 
     return scene;
