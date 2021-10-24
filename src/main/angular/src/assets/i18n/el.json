@@ -6,12 +6,16 @@
   "submit": "Υποβολή",
   "items-per-page": "Στοιχεία ανά σελίδα",
   "view-details": "Λεπτομέρειες",
-  "add-to-cart": "ΠΡΟΣΘΗΚΗ ΣΤΟ ΚΑΛΑΘΙ",
+  "add-to-cart": "Προσθήκη στο καλάθι",
   "shop-in-style": "Αγορές με στυλ!",
   "in-3-dimensions": "Σε 3 διαστάσεις",
   "home-page": "Αρχική σελίδα",
   "about-page": "Σχετικά",
+  "cart": "Καλάθι",
   "product-code": "Κωδικός προϊόντος",
   "price": "Τιμή",
-  "description": "Περιγραφή"
+  "description": "Περιγραφή",
+  "language": "Γλώσσα",
+  "language-en": "Αγγλικά",
+  "language-gr": "Ελληνικά"
 }
