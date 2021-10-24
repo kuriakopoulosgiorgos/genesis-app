@@ -6,12 +6,16 @@
   "submit": "Submit",
   "items-per-page": "Items per page",
   "view-details": "View details",
-  "add-to-cart": "ADD TO CART",
+  "add-to-cart": "Add to cart",
   "shop-in-style": "Shop in style!",
   "in-3-dimensions": "In 3 dimensions",
   "home-page": "Home page",
   "about-page": "About",
+  "cart": "Cart",
   "product-code": "Product code",
   "price": "Price",
-  "description": "Description"
+  "description": "Description",
+  "language": "Language",
+  "language-en": "English",
+  "language-el": "Greek"
 }

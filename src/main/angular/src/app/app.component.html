@@ -1,8 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Genesis</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand ml-2" routerLink="/">Genesis</a>
+  </div>
 
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -16,12 +18,27 @@
         <form class="d-flex">
           <button class="btn btn-outline-dark" type="submit">
             <i class="bi-cart-fill me-1"></i>
-            Cart
+            {{ 'cart' |  translate }}
             <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
           </button>
         </form>
       </li>
     </ul>
+  </div>
+
+  <div class="dropdown show col-6 col-lg-2 pl-0">
+    <a class="dropdown-toggle btn pr-0 pl-0" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="flag-icon flag-icon-{{ languageIcons[currentLanguage] }}"></i><span class="col-12">{{ 'language' | translate }}</span>
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <ng-container *ngFor="let language of languages">
+        <a *ngIf="language !== currentLanguage" class="btn dropdown-item" (click)="changeLanguage(language)">
+          <i class="flag-icon flag-icon-{{ languageIcons[language] }}"></i>
+          <span class="col-12">{{ 'language-' + language | translate }}</span>
+        </a>
+      </ng-container>
+    </div>
   </div>
 </nav>
 <!-- Header-->
