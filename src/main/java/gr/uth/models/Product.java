@@ -9,7 +9,10 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Table(name = "Products")
+@Table(name = "Products", indexes = {
+        @Index(name = "idx_product_name", columnList = "name"),
+        @Index(name = "idx_product_description", columnList = "description")
+})
 @Entity
 public class Product extends PanacheEntity {
 

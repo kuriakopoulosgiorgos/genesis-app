@@ -36,9 +36,10 @@ public class ProductResource {
             @QueryParam("sortByField") ProductSortByField sortByField,
             @QueryParam("sortByDirection") @DefaultValue("asc") SortByDirection sortByDirection,
             @QueryParam("page") @DefaultValue("1") @Min(1) int page,
-            @QueryParam("pageSize") @DefaultValue("25") @Min(1) @Max(50) int pageSize) {
+            @QueryParam("pageSize") @DefaultValue("25") @Min(1) @Max(50) int pageSize,
+            @QueryParam("searchTerm") String searchTerm) {
 
-        return productService.findAll(sortByField, sortByDirection, page, pageSize);
+        return productService.findAll(sortByField, sortByDirection, page, pageSize, searchTerm);
     }
 
     @POST

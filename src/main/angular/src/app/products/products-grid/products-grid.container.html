@@ -10,6 +10,9 @@
   [page]="page"
   [pageSize]="pageSize"
   [totalCount]="totalCount"
+  [sortByDirection]="sortByDirection"
+  (onSearch)="search($event)"
+  (OnSortByDirection)="changeSortByDirection($event)"
   (onPageChange)="changePage($event)"
   (onPageSizeChange)="changePageSize($event)"
   >

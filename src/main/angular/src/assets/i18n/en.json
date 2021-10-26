@@ -17,5 +17,7 @@
   "description": "Description",
   "language": "Language",
   "language-en": "English",
-  "language-el": "Greek"
+  "language-el": "Greek",
+  "search": "Search",
+  "no-products-found": "No products found!"
 }

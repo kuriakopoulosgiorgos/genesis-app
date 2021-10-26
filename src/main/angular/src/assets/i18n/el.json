@@ -17,5 +17,7 @@
   "description": "Περιγραφή",
   "language": "Γλώσσα",
   "language-en": "Αγγλικά",
-  "language-gr": "Ελληνικά"
+  "language-gr": "Ελληνικά",
+  "search": "Αναζήτηση",
+  "no-products-found": "Δεν βρεθήκαν προϊόντα!"
 }
