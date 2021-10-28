@@ -10,7 +10,9 @@ import gr.uth.interceptors.Transactional;
 import gr.uth.models.Product;
 import gr.uth.repositories.AttachmentRepository;
 import gr.uth.repositories.ProductRepository;
+import io.quarkus.hibernate.reactive.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
+import io.quarkus.panache.common.Parameters;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
 
@@ -38,11 +40,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public Uni<Pageable<Product>> findAll(ProductSortByField sortByField, SortByDirection sortByDirection,
-                                          int page, int pageSize) {
+                                          int page, int pageSize,
+                                          String searchTerm) {
         var sortByColumn = Objects.nonNull(sortByField) ? sortByField.name() : "id";
         var sort = Sort.by(sortByColumn);
         sort.direction(sortByDirection == SortByDirection.asc ? Sort.Direction.Ascending : Sort.Direction.Descending);
-        var query = productRepository.findAll(sort);
+
+        PanacheQuery<Product> query;
+        if(Objects.nonNull(searchTerm)) {
+            query = productRepository
+                    .find("LOWER(name) LIKE CONCAT('%',LOWER(:name),'%') OR " +
+                                "LOWER(description) LIKE CONCAT('%',LOWER(:description),'%')", sort,
+                            Parameters.with("name", searchTerm).and("description", searchTerm)
+                    );
+        } else {
+            query = productRepository.findAll(sort);
+        }
+
         var count = query.count();
         var products = query.page(Page.of(page - 1, pageSize)).list();
         return Uni.combine().all().unis(count, products).asTuple()
