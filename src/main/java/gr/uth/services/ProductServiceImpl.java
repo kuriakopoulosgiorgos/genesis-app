@@ -77,7 +77,8 @@ public class ProductServiceImpl implements ProductService {
                 .map((attachment -> attachment.reference))
                 .collect(Collectors.toList());
 
-       return attachmentRepository.find("reference", photoReferences)
+       return attachmentRepository.find(
+               "reference IN :references", Parameters.with("references", photoReferences))
                 .list().onItem().invoke((attachments) -> {
 
                     if(attachments.size() != photoReferences.size()) {
@@ -94,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
                .transformToUni((_v) -> {
                    if(Objects.nonNull(model)) {
                        var attachmentReference = model.attachment.reference;
-                       return  attachmentRepository.find("reference", attachmentReference).firstResult()
+                       return attachmentRepository.find("reference", attachmentReference).firstResult()
                                .onItem()
                                .ifNull().failWith(ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND))
                                .onItem()

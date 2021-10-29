@@ -12,6 +12,9 @@ export class ProductDetailsComponent implements OnInit {
   @Input()
   product: Product;
 
+  @Input()
+  previewMode = false;
+
   constructor() { }
 
   ngOnInit(): void {

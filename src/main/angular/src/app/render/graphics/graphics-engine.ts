@@ -64,7 +64,7 @@ export class GraphicsEngine {
       camera.zoomOnFactor = Math.PI / 2;
       camera.zoomOn(meshes);
       this.engine.hideLoadingUI();
-      camera.maxZ = 50;
+      camera.maxZ = 500;
     });
 
     return scene;

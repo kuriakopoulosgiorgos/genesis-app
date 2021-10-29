@@ -1,5 +1,6 @@
 package gr.uth.exceptions;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -9,6 +10,9 @@ public class ValidationExceptionMapper implements ExceptionMapper<ValidationExce
 
     @Override
     public Response toResponse(ValidationException e) {
-        return Response.status(e.getResponseStatus()).entity(e.getValidationError()).build();
+        return Response.status(e.getResponseStatus())
+                .entity(e.getValidationError())
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
 }

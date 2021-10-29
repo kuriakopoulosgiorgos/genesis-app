@@ -6,11 +6,13 @@ import { ProductsGridContainerComponent } from './products-grid/products-grid.co
 import { ProductsGridComponent } from './products-grid/products-grid.component';
 import { SharedModule } from '../shared/shared.module';
 import { NgbCarouselModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { ProductDetailsContainerComponent } from './product-details/product-details.container';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { RenderModule } from '../render/render.module';
+import { NewProductContainerComponent } from './new-product/new-product.container';
+import { NewProductComponent } from './new-product/new-product.component';
 
 
 @NgModule({
@@ -19,7 +21,9 @@ import { RenderModule } from '../render/render.module';
      ProductsGridComponent,
      ProductCardComponent,
      ProductDetailsContainerComponent,
-     ProductDetailsComponent
+     ProductDetailsComponent,
+     NewProductContainerComponent,
+     NewProductComponent
     ],
   imports: [
     SharedModule,
@@ -28,7 +32,8 @@ import { RenderModule } from '../render/render.module';
     FormsModule,
     NgbPaginationModule,
     NgbCarouselModule,
-    RenderModule
+    RenderModule,
+    ReactiveFormsModule,
   ]
 })
 export class ProductsModule { }

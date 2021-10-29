@@ -1,0 +1,173 @@
+<div class="row row-cols-1 row-cols-lg-2">
+  <div class="col border-right border newProductForm">
+    <div *ngIf="loading" class="loading">
+      <div class="spinner-border loading-spinner" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+    <form [formGroup]="productForm" (ngSubmit)="submitProduct()">
+      <div class="form-group mt-2">
+        <label for="nameInput">{{ "name" | translate }}</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nameInput"
+          placeholder="{{ 'product-name' | translate }}"
+          formControlName="name"
+          [ngClass]="{ 'is-invalid': !productForm.get('name').valid }"
+        />
+        <div class="invalid-feedback">
+          {{ "name-is-required" | translate }}
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="descriptionTextarea">{{ "description" | translate }}</label>
+        <textarea
+          class="form-control"
+          id="descriptionTextarea"
+          placeholder="{{ 'product-description' | translate }}"
+          rows="3"
+          formControlName="description"
+          [ngClass]="{ 'is-invalid': !productForm.get('description').valid }"
+        ></textarea>
+        <div class="invalid-feedback">
+          {{ "description-is-required" | translate }}
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-4 pl-0">
+          <label>{{ "price" | translate }}</label>
+          <div class="input-group">
+            <input
+              type="number"
+              class="form-control"
+              min="0"
+              value="0"
+              formControlName="price"
+              [ngClass]="{ 'is-invalid': !productForm.get('price').valid }"
+            />
+            <div class="input-group-append">
+              <span class="btn btn-outline-dark"
+                ><i class="bi bi-currency-euro"></i
+              ></span>
+            </div>
+            <div class="invalid-feedback">
+              {{ "price-is-required" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!product.model; else deleteUplaodedModel" class="form-group">
+        <p class="text-justify">
+          {{ "please-provide-the-3d-model-directory" | translate }}
+        </p>
+        <div class="custom-file input-group">
+          <input
+            #modelInput
+            required
+            id="modelUpload"
+            type="file"
+            webkitdirectory
+            multiple
+            class="custom-file-input form-control"
+            [ngClass]="{ 'is-invalid': modelInvalid }"
+            (change)="modelUpload($event); modelInput.value = ''"
+          />
+          <label class="custom-file-label" for="modelUpload">{{
+            "model-directory" | translate
+          }}</label>
+          <div class="invalid-feedback">
+            {{ "model-format-not-supported" | translate }} <br />
+            {{ "the-supported-formats-are" | translate }} {{ supportedFormats }}
+          </div>
+        </div>
+      </div>
+
+      <ng-template #deleteUplaodedModel>
+        <div class="form-group">
+          <span class="col-5"
+            >{{ "delete-model" | translate }}
+            <a class="btn btn-danger pl-2" (click)="deleteModel()"
+              ><i class="bi bi-x-lg"></i
+            ></a>
+          </span>
+        </div>
+      </ng-template>
+
+      <div class="card" [formGroup]="photosForm">
+        <div class="card-body">
+          <ng-container class="form-group">
+            <div class="custom-file">
+              <input
+                #fileInput
+                formControlName="file"
+                required
+                id="photosUpload"
+                type="file"
+                class="custom-file-input form-control"
+                [ngClass]="this.uploadedPhotos.length > 0 ? '' : 'is-invalid'"
+                (change)="photoUpload($event)"
+              />
+              <label class="custom-file-label" for="photosUpload">{{
+                "select-a-photo" | translate
+              }}</label>
+              <div class="invalid-feedback">
+                {{ "please-provide-a-photo" | translate }}
+              </div>
+            </div>
+            <div class="form-group mt-2">
+              <label for="photoDescription">{{
+                "photo-description" | translate
+              }}</label>
+              <input
+                type="text"
+                class="form-control"
+                id="photoDescription"
+                placeholder="{{ 'photo-description' | translate }}"
+                formControlName="description"
+              />
+            </div>
+          </ng-container>
+        </div>
+        <table *ngIf="uploadedPhotos.length > 0" class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">{{ "uploaded-photos" | translate }}</th>
+              <th scope="col">{{ "description" | translate }}</th>
+              <th scope="col"><i class="bi bi-gear-fill p-3"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let photo of uploadedPhotos; let i = index">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ photo.name }}</td>
+              <td>{{ photo.description }}</td>
+              <td>
+                <a class="btn btn-danger" (click)="deletePhoto(i)"
+                  ><i class="bi bi-x-lg"></i
+                ></a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="form-group mt-2">
+        <button
+          class="form-control btn btn-primary col-6 offset-3"
+          [disabled]="!(productForm.valid && this.uploadedPhotos.length > 0)"
+        >
+          {{ "submit" | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="col mt-2">
+    <app-product-details-ui
+      [product]="product"
+      [previewMode]="true"
+    ></app-product-details-ui>
+  </div>
+</div>

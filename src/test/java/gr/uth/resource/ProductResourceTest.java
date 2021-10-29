@@ -8,6 +8,7 @@ import gr.uth.repositories.AttachmentRepository;
 import gr.uth.repositories.ProductRepository;
 import gr.uth.resources.ProductResource;
 import gr.uth.services.ProductServiceImpl;
+import io.quarkus.panache.common.Parameters;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +30,6 @@ public class ProductResourceTest extends BaseTest {
     private static final String BASE_PATH = "ProductResource/";
     private static final String REQUEST_PATH = BASE_PATH + "request/";
     private static final String RESPONSE_PATH = BASE_PATH + "response/";
-
-    private static final List<String> photoReferences = Arrays.asList("photo reference 1", "photo reference 2");
 
     private static final List<Attachment> validPhotos = Arrays.asList(
             AttachmentTestUtil.createAttachment("photo reference 1", "image/png"),
@@ -62,7 +61,10 @@ public class ProductResourceTest extends BaseTest {
         final var testId = 1L;
         var product = fromJson(REQUEST_PATH + "create_noModel.json", Product.class);
 
-        TestUtil.withListResultQuery(attachmentRepository.find("reference", photoReferences), validPhotos);
+        TestUtil.withListResultQuery(
+                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
+                validPhotos
+        );
 
         Mockito.when(productRepository.persist(product))
                 .thenReturn(Uni.createFrom().item(TestUtil.entityWithId(testId, product)));
@@ -87,7 +89,10 @@ public class ProductResourceTest extends BaseTest {
         final var attachmentReference = "reference"; // representing a none existing reference
         var product = fromJson(REQUEST_PATH + "create_withModel.json", Product.class);
 
-        TestUtil.withListResultQuery(attachmentRepository.find("reference", photoReferences), validPhotos);
+        TestUtil.withListResultQuery(
+                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
+                validPhotos
+        );
         TestUtil.withFirstResultNullQuery(attachmentRepository.find("reference", attachmentReference));
 
         // THEN a validation exception should be thrown
@@ -107,8 +112,10 @@ public class ProductResourceTest extends BaseTest {
 
         var product = fromJson(REQUEST_PATH + "create_withPhotos_attachmentNotFound.json", Product.class);
 
-        TestUtil.withListResultQuery(attachmentRepository.find("reference", photoReferences),
-                Collections.singletonList(AttachmentTestUtil.createAttachment("photo reference 1", "image/png")));
+        TestUtil.withListResultQuery(
+                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
+                Collections.singletonList(AttachmentTestUtil.createAttachment("photo reference 1", "image/png"))
+        );
 
         // THEN a validation exception should be thrown
         productResource.create(product)
@@ -126,8 +133,10 @@ public class ProductResourceTest extends BaseTest {
         final String photoReference = "photo reference 1";
         var product = fromJson(REQUEST_PATH + "create_withPhotos_invalidImageType.json", Product.class);
 
-        TestUtil.withListResultQuery(attachmentRepository.find("reference", List.of(photoReference)),
-                Collections.singletonList(AttachmentTestUtil.createAttachment(photoReference, "Text/plain")));
+        TestUtil.withListResultQuery(
+                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
+                Collections.singletonList(AttachmentTestUtil.createAttachment(photoReference, "Text/plain"))
+        );
 
         // THEN a validation exception should be thrown
         productResource.create(product)
@@ -148,7 +157,9 @@ public class ProductResourceTest extends BaseTest {
         final var attachmentReference = "reference"; // representing a none existing reference
         var product = fromJson(REQUEST_PATH + "create_withModel.json", Product.class);
 
-        TestUtil.withListResultQuery(attachmentRepository.find("reference", photoReferences), validPhotos);
+        TestUtil.withListResultQuery(
+                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
+                validPhotos);
 
         TestUtil.withFirstResultQuery(attachmentRepository.find("reference", attachmentReference),
                 AttachmentTestUtil.createAttachment(attachmentReference));
