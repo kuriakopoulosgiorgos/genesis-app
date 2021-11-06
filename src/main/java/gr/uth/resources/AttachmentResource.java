@@ -6,7 +6,6 @@ import gr.uth.models.Attachment;
 import gr.uth.models.BinaryFile;
 import gr.uth.services.AttachmentService;
 import gr.uth.services.BinaryFileService;
-import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -79,7 +78,6 @@ public class AttachmentResource {
                         : Response.status(Response.Status.NOT_FOUND).build());
     }
 
-    @Blocking
     @Path("{fileReference:.+}")
     @GET
     @Produces(MediaType.TEXT_PLAIN)
