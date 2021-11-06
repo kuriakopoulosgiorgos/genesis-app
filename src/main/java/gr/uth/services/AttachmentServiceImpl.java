@@ -5,11 +5,11 @@ import gr.uth.dto.AttachmentMetaData;
 import gr.uth.exceptions.ExceptionBuilder;
 import gr.uth.exceptions.I18NMessage;
 import gr.uth.exceptions.ValidationException;
-import gr.uth.interceptors.Transactional;
 import gr.uth.models.Attachment;
 import gr.uth.models.BinaryFile;
 import gr.uth.repositories.AttachmentRepository;
 import gr.uth.repositories.BinaryFileRepository;
+import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -33,7 +33,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         this.binaryFileRepository = binaryFileRepository;
     }
 
-    @Transactional
+    @ReactiveTransactional
     @Override
     public Uni<List<Attachment>> uploadAttachments(AttachmentFormData attachmentFormData) {
 
@@ -77,7 +77,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
 
-    @Transactional
+    @ReactiveTransactional
     @Override
     public Uni<Boolean> deleteByReference(String reference) throws ValidationException {
         return attachmentRepository.find("reference", reference).firstResult()
@@ -87,7 +87,7 @@ public class AttachmentServiceImpl implements AttachmentService {
                 .transformToUni(attachment -> binaryFileRepository.deleteById(attachment.id));
     }
 
-    @Transactional
+    @ReactiveTransactional
     @Override
     public Uni<Attachment> retrieveAttachmentByReference(String reference) {
         return attachmentRepository.find("reference", reference).firstResult();

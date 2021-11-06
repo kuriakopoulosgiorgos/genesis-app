@@ -6,11 +6,11 @@ import gr.uth.dto.SortByDirection;
 import gr.uth.exceptions.ExceptionBuilder;
 import gr.uth.exceptions.I18NMessage;
 import gr.uth.exceptions.ValidationException;
-import gr.uth.interceptors.Transactional;
 import gr.uth.models.Product;
 import gr.uth.repositories.AttachmentRepository;
 import gr.uth.repositories.ProductRepository;
 import io.quarkus.hibernate.reactive.panache.PanacheQuery;
+import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Parameters;
 import io.quarkus.panache.common.Sort;
@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
+    @ReactiveTransactional
     public Uni<Pageable<Product>> findAll(ProductSortByField sortByField, SortByDirection sortByDirection,
                                           int page, int pageSize,
                                           String searchTerm) {
@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
                 });
     }
 
-    @Transactional
+    @ReactiveTransactional
     @Override
     public Uni<Product> create(Product product) throws ValidationException {
         var model = product.model;
@@ -114,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id);
     }
 
-    @Transactional
+    @ReactiveTransactional
     @Override
     public Uni<Boolean> deleteById(Long id) {
         return productRepository.deleteById(id);
