@@ -2,6 +2,9 @@ package gr.uth.services;
 
 import gr.uth.dto.AttachmentFormData;
 import gr.uth.dto.AttachmentMetaData;
+import gr.uth.exceptions.ExceptionBuilder;
+import gr.uth.exceptions.I18NMessage;
+import gr.uth.exceptions.ValidationException;
 import gr.uth.interceptors.Transactional;
 import gr.uth.models.Attachment;
 import gr.uth.models.BinaryFile;
@@ -71,6 +74,17 @@ public class AttachmentServiceImpl implements AttachmentService {
         return Uni.combine().all()
                 .unis(attachmentsUnis)
                 .combinedWith(Attachment.class, ArrayList::new);
+    }
+
+
+    @Transactional
+    @Override
+    public Uni<Boolean> deleteByReference(String reference) throws ValidationException {
+        return attachmentRepository.find("reference", reference).firstResult()
+                .onItem()
+                .ifNull().failWith(ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND))
+                .onItem()
+                .transformToUni(attachment -> binaryFileRepository.deleteById(attachment.id));
     }
 
     @Transactional

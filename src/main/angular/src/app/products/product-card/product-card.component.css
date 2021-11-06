@@ -17,10 +17,6 @@
   box-shadow: 0px 5px 10px #212121
 }
 
-.card {
-  width: fit-content
-}
-
 .card-text {
   height: 3em;
 }
@@ -34,7 +30,8 @@
 }
 
 .img-thumbnail {
-  border: none
+  border: none;
+  max-height: 9.1em;
 }
 
 .card {

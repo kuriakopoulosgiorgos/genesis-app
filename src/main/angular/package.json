@@ -33,6 +33,7 @@
     "earcut": "^2.2.2",
     "flag-icon-css": "^4.0.0",
     "jquery": "^3.5.1",
+    "popper.js": "^1.16.1",
     "save": "^2.4.0",
     "tslib": "^2.0.0",
     "webxr-polyfill": "^2.0.3",

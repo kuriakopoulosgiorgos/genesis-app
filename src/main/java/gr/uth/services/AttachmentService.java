@@ -9,5 +9,6 @@ import java.util.List;
 public interface AttachmentService {
 
     Uni<List<Attachment>> uploadAttachments(AttachmentFormData attachmentFormData);
+    Uni<Boolean> deleteByReference(String reference);
     Uni<Attachment> retrieveAttachmentByReference(String reference);
 }

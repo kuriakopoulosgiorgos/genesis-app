@@ -1,6 +1,7 @@
 package gr.uth.resources;
 
 import gr.uth.dto.AttachmentFormData;
+import gr.uth.dto.ValidationError;
 import gr.uth.models.Attachment;
 import gr.uth.models.BinaryFile;
 import gr.uth.services.AttachmentService;
@@ -53,6 +54,29 @@ public class AttachmentResource {
             )
             @MultipartForm AttachmentFormData attachmentFormData) {
         return attachmentService.uploadAttachments(attachmentFormData);
+    }
+
+    @DELETE
+    @Consumes(value = MediaType.APPLICATION_JSON)
+    @Produces(value = MediaType.TEXT_PLAIN)
+    @APIResponses({
+            @APIResponse(
+                    responseCode = "204",
+                    description = "Attachment deleted",
+                    content = @Content(mediaType = MediaType.TEXT_PLAIN)
+            ),
+            @APIResponse(
+                    responseCode = "400",
+                    description = "Attachment not found",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ValidationError.class))
+            ),
+    })
+    public Uni<Response> deleteByReference(String fileReference) {
+
+        return attachmentService.deleteByReference(fileReference).map(isDeleted ->
+                isDeleted ? Response.status(Response.Status.NO_CONTENT).build()
+                        : Response.status(Response.Status.NOT_FOUND).build());
     }
 
     @Blocking

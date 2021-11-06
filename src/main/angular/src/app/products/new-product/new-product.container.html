@@ -1,0 +1,10 @@
+<app-new-product-ui
+  [model]="model$"
+  [photos]="photos$"
+  [loading]="loading"
+  (onModelUpload)="uploadModel($event)"
+  (onModelDelete)="deleteModel()"
+  (onPhotoUpload)="uploadPhoto($event)"
+  (onPhotoDelete)="deletePhoto($event)"
+  (onSubmitProduct)="submitProduct($event)">
+</app-new-product-ui>
