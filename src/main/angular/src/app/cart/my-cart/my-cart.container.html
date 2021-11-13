@@ -3,8 +3,9 @@
     <span class="sr-only"></span>
   </div>
 </div>
-<app-product-details-ui
-  [product]="product$ | async"
-  [quantity]="quantity$ | async"
-  (onAddToCart)="addToCart($event)"
-></app-product-details-ui>
+
+<app-my-cart-ui
+  [cart]="cart$ | async"
+  [products]="products$ | async"
+  (onItemRemove)="itemRemove($event)">
+</app-my-cart-ui>

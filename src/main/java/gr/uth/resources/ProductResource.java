@@ -18,6 +18,7 @@ import javax.validation.constraints.Min;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/products")
 @Tag(name = "Product")
@@ -37,9 +38,10 @@ public class ProductResource {
             @QueryParam("sortByDirection") @DefaultValue("asc") SortByDirection sortByDirection,
             @QueryParam("page") @DefaultValue("1") @Min(1) int page,
             @QueryParam("pageSize") @DefaultValue("25") @Min(1) @Max(50) int pageSize,
+            @QueryParam("productCodes") List<Long> productCodes,
             @QueryParam("searchTerm") String searchTerm) {
 
-        return productService.findAll(sortByField, sortByDirection, page, pageSize, searchTerm);
+        return productService.findAll(sortByField, sortByDirection, page, pageSize, productCodes, searchTerm);
     }
 
     @POST

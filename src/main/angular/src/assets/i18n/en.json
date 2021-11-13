@@ -36,5 +36,10 @@
   "description-is-required": "Description is required",
   "price-is-required": "Price is required",
   "model-format-not-supported": "Model format not supported",
-  "the-supported-formats-are": "The supported formats are"
+  "the-supported-formats-are": "The supported formats are",
+  "cart-is-empty": "Cart is empty",
+  "continue-shopping": "Continue shopping",
+  "cart-is-full": "The cart is full",
+  "quantity": "Quantity",
+  "total": "Total"
 }

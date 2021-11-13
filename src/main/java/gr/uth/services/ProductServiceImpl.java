@@ -9,7 +9,6 @@ import gr.uth.exceptions.ValidationException;
 import gr.uth.models.Product;
 import gr.uth.repositories.AttachmentRepository;
 import gr.uth.repositories.ProductRepository;
-import io.quarkus.hibernate.reactive.panache.PanacheQuery;
 import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Parameters;
@@ -41,22 +40,24 @@ public class ProductServiceImpl implements ProductService {
     @ReactiveTransactional
     public Uni<Pageable<Product>> findAll(ProductSortByField sortByField, SortByDirection sortByDirection,
                                           int page, int pageSize,
-                                          String searchTerm) {
+                                          List<Long> productCodes, String searchTerm) {
         var sortByColumn = Objects.nonNull(sortByField) ? sortByField.name() : "id";
         var sort = Sort.by(sortByColumn);
         sort.direction(sortByDirection == SortByDirection.asc ? Sort.Direction.Ascending : Sort.Direction.Descending);
 
-        PanacheQuery<Product> query;
+        var jpqlBuilder = new StringBuilder("1 = 1 ");
+        var parameters = new Parameters();
+        if(Objects.nonNull(productCodes) && !productCodes.isEmpty()) {
+            jpqlBuilder.append("AND id IN :productsCodes ");
+            parameters.and("productsCodes", productCodes);
+        }
         if(Objects.nonNull(searchTerm)) {
-            query = productRepository
-                    .find("LOWER(name) LIKE CONCAT('%',LOWER(:name),'%') OR " +
-                                "LOWER(description) LIKE CONCAT('%',LOWER(:description),'%')", sort,
-                            Parameters.with("name", searchTerm).and("description", searchTerm)
-                    );
-        } else {
-            query = productRepository.findAll(sort);
+            jpqlBuilder.append("AND (LOWER(name) LIKE CONCAT('%',LOWER(:name),'%') OR ");
+            jpqlBuilder.append("LOWER(description) LIKE CONCAT('%',LOWER(:description),'%')) ");
+            parameters.and("name", searchTerm).and("description", searchTerm);
         }
 
+        var query = productRepository.find(jpqlBuilder.toString(), sort, parameters);
         var count = query.count();
         var products = query.page(Page.of(page - 1, pageSize)).list();
         return Uni.combine().all().unis(count, products).asTuple()

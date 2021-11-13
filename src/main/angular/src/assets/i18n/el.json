@@ -36,5 +36,10 @@
   "description-is-required": "Η περιγραφή είναι υποχρεωτική",
   "price-is-required": "Η τιμή είναι υποχρεωτική",
   "model-format-not-supported": "Μη υποστηριζόμενη μορφή μοντέλου",
-  "the-supported-formats-are": "Οι υποστηριζόμενες μορφές είναι"
+  "the-supported-formats-are": "Οι υποστηριζόμενες μορφές είναι",
+  "cart-is-empty": "Το καλάθι είναι άδειο",
+  "continue-shopping": "Συνέχισε να ψωνίζεις",
+  "cart-is-full": "Το καλάθι είναι γεμάτο",
+  "quantity": "Ποσότητα",
+  "total": "Σύνολο"
 }

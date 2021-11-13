@@ -15,10 +15,10 @@
         <a class="nav-link" href="#">{{ 'about-page' | translate }}</a>
       </li>
       <li class="nav-item">
-        <button class="btn btn-outline-dark mt-2 mt-lg-0 ml-lg-2">
+        <button class="btn btn-outline-dark mt-2 mt-lg-0 ml-lg-2" routerLink="cart" >
           <i class="bi-cart-fill me-1"></i>
           {{ 'cart' |  translate }}
-          <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+          <span class="badge bg-dark text-white ms-1 rounded-pill">{{ itemsInCart }}</span>
         </button>
       </li>
       <li class="nav-item">
@@ -57,4 +57,10 @@
 </header>
 <main class="container">
   <router-outlet></router-outlet>
+  <div class="container-fluid error" *ngIf="error">
+    <ngb-toast class="errorMessage text-center"
+    [autohide]="false">
+      {{error}}
+      </ngb-toast>
+  </div>
 </main>

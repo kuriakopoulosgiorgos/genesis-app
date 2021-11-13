@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Product } from 'src/app/api/models/product';
 
 @Component({
@@ -10,6 +10,12 @@ export class ProductCardComponent implements OnInit {
 
   @Input()
   product: Product;
+
+  @Input()
+  quantity = 0;
+
+  @Output()
+  onAddToCart: EventEmitter<void> = new EventEmitter();
 
   readonly maxTitleSize = 19;
   readonly maxDescriptionSize = 61;
@@ -31,4 +37,7 @@ export class ProductCardComponent implements OnInit {
     return this.product?.description.length > this.maxDescriptionSize ? this.product.description : '';
   }
 
+  addToCart(): void {
+    this.onAddToCart.emit();
+  }
 }

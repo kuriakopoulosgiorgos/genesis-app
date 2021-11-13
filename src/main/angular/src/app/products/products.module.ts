@@ -7,6 +7,7 @@ import { ProductsGridComponent } from './products-grid/products-grid.component';
 import { SharedModule } from '../shared/shared.module';
 import { NgbCarouselModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductCardContainer } from './product-card/product-card.container';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { ProductDetailsContainerComponent } from './product-details/product-details.container';
 import { ProductDetailsComponent } from './product-details/product-details.component';
@@ -19,6 +20,7 @@ import { NewProductComponent } from './new-product/new-product.component';
   declarations: [
      ProductsGridContainerComponent,
      ProductsGridComponent,
+     ProductCardContainer,
      ProductCardComponent,
      ProductDetailsContainerComponent,
      ProductDetailsComponent,
