@@ -14,7 +14,7 @@
   </div>
   <div class="alert alert-primary col-6 offset-3" *ngIf="products?.length === 0" role="alert">{{ 'no-products-found' | translate }}</div>
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-    <app-product-card-ui class="col mt-2" *ngFor="let product of products" [product]="product"></app-product-card-ui>
+    <app-product-card class="col mt-2" *ngFor="let product of products" [product]="product"></app-product-card>
   </div>
 
   <div class="row">

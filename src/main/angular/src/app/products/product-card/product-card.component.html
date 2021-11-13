@@ -15,7 +15,11 @@
       <div class="card-body text-center mx-auto" ngbPopover="{{ descriptionPopover | translate }}" triggers="mouseenter:mouseleave">
           <div class='cvp'>
               <p class="card-text">{{ product.description | translate | truncate:maxDescriptionSize }}</p>
-              <p class="card-text pt-2">{{ product.price }}€</p> <a routerLink="details/{{ product.id }}" class="btn details px-auto">{{ 'view-details' | translate }}</a><br /> <a href="#" class="btn cart px-auto">{{ 'add-to-cart' | translate }}</a>
+              <p class="card-text pt-2">{{ product.price }}€</p>
+              <a routerLink="details/{{ product.id }}" class="btn details px-auto">{{ 'view-details' | translate }}</a><br/>
+              <a class="btn cart-btn px-auto" (click)=addToCart()>{{ 'add-to-cart' | translate }}
+                <span *ngIf="quantity > 0" class="badge bg-white text-dark ms-1 rounded-pill">{{ quantity }}</span>
+              </a>
           </div>
       </div>
   </div>
