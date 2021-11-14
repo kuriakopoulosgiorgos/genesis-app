@@ -59,6 +59,10 @@ export class CartService {
       return this._cart[productCode] ? this._cart[productCode] : 0;
   }
 
+  isEmpty(): boolean {
+    return Object.keys(this._cart).length == 0;
+  }
+
   private getCartFromLocalStorage(): Cart {
     let _cart = JSON.parse(localStorage.getItem(CartService.CART)) as Cart;
 

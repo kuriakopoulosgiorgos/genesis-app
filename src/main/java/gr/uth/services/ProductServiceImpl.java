@@ -1,5 +1,6 @@
 package gr.uth.services;
 
+import gr.uth.GenesisUser;
 import gr.uth.dto.Pageable;
 import gr.uth.dto.ProductSortByField;
 import gr.uth.dto.SortByDirection;
@@ -30,10 +31,12 @@ public class ProductServiceImpl implements ProductService {
 
     final ProductRepository productRepository;
     final AttachmentRepository attachmentRepository;
+    final GenesisUser user;
 
-    public ProductServiceImpl(ProductRepository productRepository, AttachmentRepository attachmentRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, AttachmentRepository attachmentRepository, GenesisUser user) {
         this.productRepository = productRepository;
         this.attachmentRepository = attachmentRepository;
+        this.user = user;
     }
 
     @Override
@@ -44,7 +47,6 @@ public class ProductServiceImpl implements ProductService {
         var sortByColumn = Objects.nonNull(sortByField) ? sortByField.name() : "id";
         var sort = Sort.by(sortByColumn);
         sort.direction(sortByDirection == SortByDirection.asc ? Sort.Direction.Ascending : Sort.Direction.Descending);
-
         var jpqlBuilder = new StringBuilder("1 = 1 ");
         var parameters = new Parameters();
         if(Objects.nonNull(productCodes) && !productCodes.isEmpty()) {
@@ -72,6 +74,7 @@ public class ProductServiceImpl implements ProductService {
     @ReactiveTransactional
     @Override
     public Uni<Product> create(Product product) throws ValidationException {
+        product.uploadedBy = user.getUsername();
         var model = product.model;
 
         var photoReferences = product.photos.stream()

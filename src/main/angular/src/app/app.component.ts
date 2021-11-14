@@ -4,6 +4,7 @@ import { CartService } from './cart.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ErrorService } from './error.service';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-root',
@@ -23,10 +24,17 @@ export class AppComponent implements OnDestroy {
   currentLanguage: string;
   itemsInCart = 0;
   error: string;
+  isLoggedIn$ = this.keycloakService.isLoggedIn();
+  isSupplier = this.keycloakService.getUserRoles().includes('supplier');
 
   private destroy = new Subject();
 
-  constructor(private translateService: TranslateService, private cartService: CartService, private errorService: ErrorService) {
+  constructor(
+    private translateService: TranslateService,
+    private cartService: CartService,
+    private errorService: ErrorService,
+    private keycloakService: KeycloakService) {
+
     let language = localStorage.getItem("language");
     // if not previously set
     if(!language) {
@@ -53,6 +61,16 @@ export class AppComponent implements OnDestroy {
     this.currentLanguage = language;
     localStorage.setItem("language", this.currentLanguage);
     this.translateService.setDefaultLang(language);
+  }
+
+  async onLogin(): Promise<void> {
+    return await this.keycloakService.login({
+      redirectUri: window.location.origin
+    });
+  }
+
+  async onLogout(): Promise<void> {
+    return await this.keycloakService.logout(window.location.origin);
   }
 
   ngOnDestroy(): void {
