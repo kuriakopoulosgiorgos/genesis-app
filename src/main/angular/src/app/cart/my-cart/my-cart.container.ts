@@ -13,14 +13,9 @@ import { Cart } from 'src/app/models';
 })
 export class MyCartContainerComponent implements OnInit {
 
-  private products: Observable<Product[]> = this.cartService.cart$.pipe(
+  private products: Observable<Product[]> = !this.cartService.isEmpty() ? this.cartService.cart$.pipe(
     take(1),
-    tap(cart => {
-      this.loading = Object.keys(cart).length > 0;
-    }),
-    switchMap(cart => Object.keys(cart).length > 0 ?
-    this.productService
-     .findAll({
+    switchMap(cart => this.productService.findAll({
        productCodes: Object.keys(cart).map((id) => +id),
      })
      .pipe(
@@ -28,8 +23,7 @@ export class MyCartContainerComponent implements OnInit {
          this.loading = false;
          return pageableProducts.data
        })
-     ) : of([]))
-  );
+     ))) : of([]);
 
   private onItemRemove: Subject<number> = new Subject();
 
@@ -43,7 +37,7 @@ export class MyCartContainerComponent implements OnInit {
     []
   );
 
-  loading = true;
+  loading = !this.cartService.isEmpty();
 
   constructor(
     private cartService: CartService,

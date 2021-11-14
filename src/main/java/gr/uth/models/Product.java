@@ -32,4 +32,7 @@ public class Product extends PanacheEntity {
     @Valid
     @OneToOne(cascade = CascadeType.ALL)
     public Model model;
+
+    @Column(nullable = false)
+    public String uploadedBy;
 }
