@@ -1,5 +1,6 @@
 package gr.uth.resource;
 
+import gr.uth.GenesisUser;
 import gr.uth.exceptions.I18NMessage;
 import gr.uth.exceptions.ValidationException;
 import gr.uth.models.Attachment;
@@ -42,6 +43,9 @@ public class ProductResourceTest extends BaseTest {
     @Mock
     private AttachmentRepository attachmentRepository;
 
+    @Mock
+    private GenesisUser user;
+
     @InjectMocks
     private ProductServiceImpl productService;
 
@@ -49,6 +53,7 @@ public class ProductResourceTest extends BaseTest {
 
     @BeforeEach
     public void initialize() {
+        Mockito.when(user.getUsername()).thenReturn("user");
         this.productResource = new ProductResource(productService);
     }
 

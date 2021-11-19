@@ -41,5 +41,7 @@
   "continue-shopping": "Continue shopping",
   "cart-is-full": "The cart is full",
   "quantity": "Quantity",
-  "total": "Total"
+  "total": "Total",
+  "login": "Login",
+  "logout": "Logout"
 }

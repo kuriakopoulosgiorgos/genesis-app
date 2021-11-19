@@ -21,28 +21,42 @@
           <span class="badge bg-dark text-white ms-1 rounded-pill">{{ itemsInCart }}</span>
         </button>
       </li>
-      <li class="nav-item">
+      <li *ngIf="isSupplier" class="nav-item">
         <a class="btn btn-outline-dark bg-info text-white mt-2 mt-lg-0 ml-lg-2" routerLink="products/new-product">
           {{ 'new-product' |  translate }}
         </a>
       </li>
+      <li class="nav-item">
+        <div class="dropdown show ml-md-2">
+          <a class="dropdown-toggle btn pr-0 pl-0" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="flag-icon flag-icon-{{ languageIcons[currentLanguage] }}"></i><span class="col-12">{{ 'language' | translate }}</span>
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ng-container *ngFor="let language of languages">
+              <a *ngIf="language !== currentLanguage" class="btn dropdown-item" (click)="changeLanguage(language)">
+                <i class="flag-icon flag-icon-{{ languageIcons[language] }}"></i>
+                <span class="col-12">{{ 'language-' + language | translate }}</span>
+              </a>
+            </ng-container>
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
 
-  <div class="dropdown show col-6 col-lg-2 pl-0">
-    <a class="dropdown-toggle btn pr-0 pl-0" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="flag-icon flag-icon-{{ languageIcons[currentLanguage] }}"></i><span class="col-12">{{ 'language' | translate }}</span>
+  <div *ngIf="isLoggedIn$ | async; then logout else login"></div>
+  <ng-template #login>
+    <a class="btn btn-outline-dark bg-secondary text-white mt-2 col-4 col-md-2 col-lg-1" (click)="onLogin()">
+      {{ 'login' |  translate }} <i class="bi bi-person-circle"></i>
     </a>
+  </ng-template>
+  <ng-template #logout>
+    <a class="btn btn-outline-dark bg-secondary text-white mt-2 col-4 col-md-2 col-lg-1" (click)="onLogout()">
+      {{ 'logout' |  translate }} <i class="bi bi-door-open"></i>
+    </a>
+  </ng-template>
 
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-      <ng-container *ngFor="let language of languages">
-        <a *ngIf="language !== currentLanguage" class="btn dropdown-item" (click)="changeLanguage(language)">
-          <i class="flag-icon flag-icon-{{ languageIcons[language] }}"></i>
-          <span class="col-12">{{ 'language-' + language | translate }}</span>
-        </a>
-      </ng-container>
-    </div>
-  </div>
 </nav>
 <!-- Header-->
 <header class="bg-dark py-5">

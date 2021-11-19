@@ -10,7 +10,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -45,6 +45,7 @@ public class ProductResource {
     }
 
     @POST
+    @RolesAllowed("supplier")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
     public Uni<Product> create(@Valid Product product) {
@@ -60,6 +61,7 @@ public class ProductResource {
     }
 
     @DELETE
+    @RolesAllowed("supplier")
     @Path(value = "/{id}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.TEXT_PLAIN)
