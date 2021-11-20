@@ -7,5 +7,6 @@
 <app-my-cart-ui
   [cart]="cart$ | async"
   [products]="products$ | async"
-  (onItemRemove)="itemRemove($event)">
+  (onItemRemove)="itemRemove($event)"
+  (onCheckout)="checkout()">
 </app-my-cart-ui>

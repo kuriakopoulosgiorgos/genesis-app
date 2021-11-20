@@ -18,6 +18,9 @@ export class MyCartComponent implements OnInit {
   @Output()
   onItemRemove: EventEmitter<number> = new EventEmitter();
 
+  @Output()
+  onCheckout: EventEmitter<void> = new EventEmitter();
+
   constructor() { }
 
   ngOnInit(): void {
@@ -29,6 +32,10 @@ export class MyCartComponent implements OnInit {
 
   itemRemove(productId: number): void {
     this.onItemRemove.emit(productId);
+  }
+
+  checkout(): void {
+    this.onCheckout.emit();
   }
 
 }

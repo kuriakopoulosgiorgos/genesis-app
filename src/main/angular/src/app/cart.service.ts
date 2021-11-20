@@ -46,6 +46,14 @@ export class CartService {
     this.cart.next(this._cart);
   }
 
+  removeAllItems(): void {
+    this.currentItemsCount = 0;
+    this._cart = CartService.EMPTY_CART;
+    localStorage.setItem(CartService.CART, JSON.stringify(this._cart));
+    this.itemsInCart.next(this.currentItemsCount);
+    this.cart.next(this._cart);
+  }
+
   removeAllItemsByProductCode(productCode: string): void {
     let quantity =  this._cart[productCode] ? this._cart[productCode] : 0;
     this.currentItemsCount -= quantity;

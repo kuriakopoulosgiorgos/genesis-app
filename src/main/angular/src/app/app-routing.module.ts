@@ -5,6 +5,7 @@ const routes: Routes = [
   { path: 'products', loadChildren: () => import('./products/products.module').then(m => m.ProductsModule) },
   { path: 'render', loadChildren: () => import('./render/render.module').then(m => m.RenderModule) },
   { path: 'cart', loadChildren: () => import('./cart/cart.module').then(m => m.CartModule) },
+  { path: 'payment', loadChildren: () => import('./payment/payment.module').then(m => m.PaymentModule) },
   { path: '',   redirectTo: 'products', pathMatch: 'full' },
 ];
 

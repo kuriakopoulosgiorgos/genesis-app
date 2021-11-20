@@ -43,5 +43,9 @@
   "quantity": "Ποσότητα",
   "total": "Σύνολο",
   "login": "Σύνδεση",
-  "logout": "Αποσύνδεση"
+  "logout": "Αποσύνδεση",
+  "checkout": "Πληρωμή",
+  "payment-success": "Επιτυχής πληρωμή",
+  "payment-completed-successfully": "Η πληρωμή ολοκληρώθηκε με επιτυχία!",
+  "payment-cancelled": "H πληρωμή ακυρώθηκε"
 }

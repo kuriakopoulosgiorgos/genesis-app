@@ -43,5 +43,9 @@
   "quantity": "Quantity",
   "total": "Total",
   "login": "Login",
-  "logout": "Logout"
+  "logout": "Logout",
+  "checkout": "Checkout",
+  "payment-success": "Payment success",
+  "payment-completed-successfully": "The Payment was completed successfully!",
+  "payment-cancelled": "Payment cancelled"
 }
