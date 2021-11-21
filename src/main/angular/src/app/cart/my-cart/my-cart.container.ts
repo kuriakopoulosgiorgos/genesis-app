@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/api/models/product';
 import { CartService } from 'src/app/cart.service';
 import { Subject, Observable, of } from 'rxjs';
-import { tap, switchMap, take, map } from 'rxjs/operators';
+import { switchMap, take, map } from 'rxjs/operators';
 import { ProductService } from 'src/app/api/services/product.service';
 import { multiScan } from 'rxjs-multi-scan';
-import { Cart } from 'src/app/models';
+import { CheckoutService } from 'src/app/api/services/checkout.service';
 
 @Component({
   selector: 'app-my-cart',
@@ -41,7 +41,8 @@ export class MyCartContainerComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private productService: ProductService
+    private productService: ProductService,
+    private checkoutService: CheckoutService
   ) {}
 
   ngOnInit(): void {}
@@ -49,5 +50,17 @@ export class MyCartContainerComponent implements OnInit {
   itemRemove(productId: number): void {
     this.onItemRemove.next(productId);
     this.cartService.removeAllItemsByProductCode(productId + '');
+  }
+
+  checkout(): void {
+    this.loading = true;
+    this.cartService.cart$.pipe(
+      take(1),
+      switchMap(cart => this.checkoutService.checkout$Response({
+        paymentSuccessFragment: '#payment/payment-success',
+        paymentCancelFragment: '#payment/payment-cancel',
+        body: {...cart } }
+        ))
+    ).subscribe((result) => window.location.href = result.headers.get('location'));
   }
 }

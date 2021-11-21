@@ -17,6 +17,7 @@
       <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
       <quarkus.platform.version>2.4.1.Final</quarkus.platform.version>
       <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+      <stripe.version>20.87.0</stripe.version>
   </properties>
 
   <dependencyManagement>
@@ -63,6 +64,11 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-oidc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.stripe</groupId>
+      <artifactId>stripe-java</artifactId>
+      <version>${stripe.version}</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
