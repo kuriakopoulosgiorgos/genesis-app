@@ -37,6 +37,9 @@ export class GraphicsEngine {
       this.engine.resize();
     };
 
+    // customize loading screen
+    this.customLoadingScreen();
+
     // creating minimal scene
     this.scene = this.createScene(this.canvas.nativeElement, modelRootURL, model);
     // running babylonJS
@@ -73,5 +76,26 @@ export class GraphicsEngine {
   private renderLoop(): void {
     this.scene.render();
     this.fpsCount.next(this.engine.getFps());
+  }
+
+  private customLoadingScreen(): void {
+    BABYLON.DefaultLoadingScreen.prototype.displayLoadingUI = function () {
+      if (document.getElementById("customLoadingScreenDiv")) {
+          // Do not add a loading screen if there is already one
+          document.getElementById("customLoadingScreenDiv").style.display = "initial";
+          return;
+      }
+      this._loadingDiv = document.createElement('div');
+      this._loadingDiv.id = "customLoadingScreenDiv";
+      this._loadingDiv.innerHTML = '<img class="col-6 offset-3" src="assets/genesis_logo.gif"/>';
+
+      this._resizeLoadingUI();
+      window.addEventListener("resize", this._resizeLoadingUI);
+      document.body.appendChild(this._loadingDiv);
+    };
+
+    BABYLON.DefaultLoadingScreen.prototype.hideLoadingUI = function() {
+        document.getElementById("customLoadingScreenDiv").style.display = "none";
+    }
   }
 }
