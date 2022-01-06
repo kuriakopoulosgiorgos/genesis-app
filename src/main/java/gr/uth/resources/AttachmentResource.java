@@ -21,7 +21,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @Path("/attachments")
@@ -107,8 +106,7 @@ public class AttachmentResource {
 
     private Uni<Response> fileResponse(Attachment attachment, BinaryFile binaryFile) {
 
-
-        return Uni.createFrom().item(Response.ok(new ByteArrayInputStream(binaryFile.data))
+        return Uni.createFrom().item(Response.ok(binaryFile.data)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "filename=" + attachment.name)
                 .header(HttpHeaders.CONTENT_TYPE, attachment.contentType)
                 .build());

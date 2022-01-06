@@ -47,12 +47,12 @@
 
   <div *ngIf="isLoggedIn$ | async; then logout else login"></div>
   <ng-template #login>
-    <a class="btn btn-outline-dark bg-secondary text-white mt-2 col-4 col-md-2 col-lg-1" (click)="onLogin()">
+    <a class="btn btn-outline-dark bg-secondary text-white mt-2 col-5 col-md-2 col-lg-2" (click)="onLogin()">
       {{ 'login' |  translate }} <i class="bi bi-person-circle"></i>
     </a>
   </ng-template>
   <ng-template #logout>
-    <a class="btn btn-outline-dark bg-secondary text-white mt-2 col-4 col-md-2 col-lg-1" (click)="onLogout()">
+    <a class="btn btn-outline-dark bg-secondary text-white mt-2 col-5 col-md-2 col-lg-2" (click)="onLogout()">
       {{ 'logout' |  translate }} <i class="bi bi-door-open"></i>
     </a>
   </ng-template>

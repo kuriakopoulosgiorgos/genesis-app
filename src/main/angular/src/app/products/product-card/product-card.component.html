@@ -1,11 +1,11 @@
 <div class='container-fluid'>
-  <div class="card mx-auto">
+  <div class="card">
     <div class="card-header">
       <div class="row" ngbPopover="{{ titlePopover | translate }}" triggers="mouseenter:mouseleave">
-        <div class="col-8 text-center  text-nowrap">
+        <div class="col-10 text-center">
           <h5 class="font-weight-bold">{{ product.name | translate | truncate:maxTitleSize }}</h5>
         </div>
-        <div class="col-2 offset-2">
+        <div class="text-right">
           <span class="badge badge-dark" *ngIf="product.model">3D</span>
         </div>
       </div>
