@@ -47,7 +47,7 @@ export class GraphicsEngine {
   }
 
   fullScreen(): void {
-    this.engine.enterFullscreen(false);
+    this.engine.enterFullscreen(true);
   }
 
   private createScene(canvas: HTMLCanvasElement, modelRootURL: string, model: string): BABYLON.Scene {

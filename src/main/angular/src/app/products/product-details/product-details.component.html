@@ -26,8 +26,8 @@
           </ng-template>
         </ngb-carousel>
       </div>
-      <div *ngIf="!previewMode" class="row col-12 offset-md-4 offset-2 mt-4">
-        <button class="btn btn-outline-dark col-6 col-md-3 ml-2" type="button" (click)="addToCart()">
+      <div *ngIf="!previewMode" class="row col-10 offset-1 offset-md-4 mt-4">
+        <button class="btn btn-outline-dark col-10 col-md-3 ml-2" type="button" (click)="addToCart()">
             <i class="bi-cart-fill me-1"></i>
             {{ 'add-to-cart' | translate }}
             <span *ngIf="quantity > 0" class="badge bg-dark text-white ms-1 rounded-pill">{{ quantity }}</span>
