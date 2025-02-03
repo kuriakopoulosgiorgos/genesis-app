@@ -69,6 +69,10 @@ export class NewProductComponent implements OnInit, OnDestroy {
     return SUPPORTED_MODEL_EXTENSIONS;
   }
 
+  get rootUrl(): string {
+    return this.newProductPresenter.rootUrl ;
+  }
+
   ngOnInit(): void {
     this.newProductPresenter.init(this.model, this.photos);
     this.newProductPresenter.onModelUpload$.pipe(

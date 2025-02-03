@@ -65,12 +65,12 @@ export class AppComponent implements OnDestroy {
 
   async onLogin(): Promise<void> {
     return await this.keycloakService.login({
-      redirectUri: window.location.origin
+      redirectUri: window.location.href
     });
   }
 
   async onLogout(): Promise<void> {
-    return await this.keycloakService.logout(window.location.origin);
+    return await this.keycloakService.logout(window.location.href);
   }
 
   ngOnDestroy(): void {

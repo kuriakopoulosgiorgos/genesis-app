@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, tap, map } from 'rxjs/operators';
+import { ApiConfiguration } from 'src/app/api/api-configuration';
 import { Product } from 'src/app/api/models/product';
 import { ProductService } from 'src/app/api/services/product.service';
 import { CartService } from 'src/app/cart.service';
@@ -26,7 +27,9 @@ export class ProductDetailsContainerComponent implements OnInit {
     ))
   );
 
-  constructor(private route: ActivatedRoute, private productService: ProductService, private cartService: CartService) { }
+  rootUrl: string = this.apiConfiguration.rootUrl;
+
+  constructor(private route: ActivatedRoute, private apiConfiguration: ApiConfiguration, private productService: ProductService, private cartService: CartService) { }
 
   ngOnInit(): void {
   }

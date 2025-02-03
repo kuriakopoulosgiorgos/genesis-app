@@ -6,12 +6,11 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import gr.uth.models.Product;
 import gr.uth.repositories.ProductRepository;
-import io.quarkus.panache.common.Parameters;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,10 +20,13 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     @Inject
     @ConfigProperty(name = "stripe.api.secret-key")
-    String stripeApiSecretKey;
+    private String stripeApiSecretKey;
+    private ProductRepository productRepository;
 
-    final ProductRepository productRepository;
+    public CheckoutServiceImpl() {
+    }
 
+    @Inject
     public CheckoutServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -41,9 +43,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
 
-        List<Product> products = productRepository.find(
-                "id IN :productsCodes", Parameters.with("productsCodes", productIds)
-                ).list().await().indefinitely();
+        List<Product> products = productRepository.findByIds(productIds);
 
         List<SessionCreateParams.LineItem> lineItems = products.stream().map(product ->
                 SessionCreateParams.LineItem.builder()
@@ -51,10 +51,10 @@ public class CheckoutServiceImpl implements CheckoutService {
                         .setPriceData(
                                 SessionCreateParams.LineItem.PriceData.builder()
                                         .setCurrency("eur")
-                                        .setUnitAmount((long) ((product.price * cart.get("" + product.id)) * 100))
+                                        .setUnitAmount((long) ((product.getPrice() * cart.get("" + product.getId())) * 100))
                                         .setProductData(
                                                 SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                                        .setName(product.name)
+                                                        .setName(product.getName())
                                                         .build()
                                         )
                                         .build())

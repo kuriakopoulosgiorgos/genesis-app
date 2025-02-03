@@ -1,17 +1,53 @@
 package gr.uth.models;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntity;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Table(name = "BinaryFiles")
 @Entity
-public class BinaryFile extends PanacheEntity {
+@NamedQueries({
+        @NamedQuery(
+                name = "BinaryFile.deleteById",
+                query = """
+                        DELETE
+                        FROM BinaryFile b
+                        WHERE b.id = :id
+                        """
+        )
+})
+public class BinaryFile {
+
+    @Id
+    @Column(name = "attachment_id", nullable = false)
+    private Long id;
 
     @Lob
-    public byte[] data;
+    private byte[] data;
 
     @OneToOne
     @MapsId
-    public Attachment attachment;
+    private Attachment attachment;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
 }

@@ -1,7 +1,6 @@
 import { TranslateModule } from '@ngx-translate/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiModule } from '../api/api.module';
 import { TruncatePipe } from './truncate.pipe';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,7 +11,6 @@ import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   imports: [
     CommonModule,
-    ApiModule,
     TranslateModule,
     NgbPopoverModule
   ],

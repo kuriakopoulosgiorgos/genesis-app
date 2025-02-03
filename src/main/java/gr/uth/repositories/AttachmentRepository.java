@@ -1,6 +1,15 @@
 package gr.uth.repositories;
 
 import gr.uth.models.Attachment;
-import io.quarkus.hibernate.reactive.panache.PanacheRepository;
 
-public interface AttachmentRepository extends PanacheRepository<Attachment> {}
+import java.util.List;
+import java.util.Optional;
+
+public interface AttachmentRepository {
+
+    Optional<Attachment> findByReference(String reference);
+
+    List<Attachment> findByReferences(List<String> references);
+
+    Attachment persist(Attachment attachment);
+}

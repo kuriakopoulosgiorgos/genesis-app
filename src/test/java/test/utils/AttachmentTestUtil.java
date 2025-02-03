@@ -19,11 +19,11 @@ public class AttachmentTestUtil {
     public static Attachment createAttachment(String reference, String name, String description,
                                               Long size, String contentType) {
         var attachment = new Attachment();
-        attachment.reference = reference;
-        attachment.name = name;
-        attachment.description = description;
-        attachment.size = size;
-        attachment.contentType = contentType;
+        attachment.setReference(reference);
+        attachment.setName(name);
+        attachment.setDescription(description);
+        attachment.setSize(size);
+        attachment.setContentType(contentType);
         return attachment;
     }
 }

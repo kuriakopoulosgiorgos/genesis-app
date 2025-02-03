@@ -14,6 +14,9 @@ export class ProductCardComponent implements OnInit {
   @Input()
   quantity = 0;
 
+  @Input()
+  rootUrl: string;
+
   @Output()
   onAddToCart: EventEmitter<void> = new EventEmitter();
 
@@ -26,7 +29,7 @@ export class ProductCardComponent implements OnInit {
   }
 
   get thumbnail() {
-    return "api/attachments/" + this.product.photos[0].reference;
+    return this.rootUrl + "/api/attachments/" + this.product.photos[0].reference;
   }
 
   get titlePopover() {

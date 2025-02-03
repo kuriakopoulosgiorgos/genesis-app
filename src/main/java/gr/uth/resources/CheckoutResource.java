@@ -4,14 +4,15 @@ import com.stripe.exception.StripeException;
 import gr.uth.services.CheckoutService;
 import org.eclipse.microprofile.openapi.annotations.headers.Header;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.util.Map;
 
@@ -20,7 +21,10 @@ import java.util.Map;
 public class CheckoutResource {
 
     @Inject
-    final CheckoutService checkoutService;
+    private CheckoutService checkoutService;
+
+    public CheckoutResource() {
+    }
 
     public CheckoutResource(CheckoutService checkoutService) {
         this.checkoutService = checkoutService;
@@ -33,7 +37,7 @@ public class CheckoutResource {
             @APIResponse(
                     responseCode = "200",
                     description = "Checkout session started",
-                    headers = @Header(name = "location", description = "The redirect location"),
+                    headers = @Header(name = "location", schema = @Schema(), description = "The redirect location"),
                     content = @Content(mediaType = MediaType.TEXT_PLAIN)
             )
     })

@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `Attachments` (
-  `id` bigint NOT NULL,
+  `id` bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `contentType` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
@@ -41,21 +41,6 @@ CREATE TABLE `BinaryFiles` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `hibernate_sequence`
---
-
-CREATE TABLE `hibernate_sequence` (
-  `next_val` bigint DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `hibernate_sequence`
---
-
-INSERT INTO `hibernate_sequence` (`next_val`) VALUES
-(1);
-
 -- --------------------------------------------------------
 
 --
@@ -63,7 +48,7 @@ INSERT INTO `hibernate_sequence` (`next_val`) VALUES
 --
 
 CREATE TABLE `Models` (
-  `id` bigint NOT NULL,
+  `id` bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `uploadDate` datetime(6) DEFAULT NULL,
   `attachment_id` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -75,7 +60,7 @@ CREATE TABLE `Models` (
 --
 
 CREATE TABLE `Products` (
-  `id` bigint NOT NULL,
+  `id` bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `description` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `price` double NOT NULL,
@@ -102,7 +87,6 @@ CREATE TABLE `Products_Attachments` (
 -- Indexes for table `Attachments`
 --
 ALTER TABLE `Attachments`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UK_20ov5wxnt9f69nr0uqedixgfq` (`reference`);
 
 --
@@ -115,14 +99,12 @@ ALTER TABLE `BinaryFiles`
 -- Indexes for table `Models`
 --
 ALTER TABLE `Models`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `FKpikmfsq8pugm7vvahljxigtij` (`attachment_id`);
 
 --
 -- Indexes for table `Products`
 --
 ALTER TABLE `Products`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `idx_product_name` (`name`),
   ADD KEY `idx_product_description` (`description`),
   ADD KEY `FK8yrwxmolj9l2n79nbmm7g49ec` (`model_id`);

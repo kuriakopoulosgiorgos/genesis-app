@@ -6,7 +6,7 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --ssl --ssl-key ../resources/dev-ssl-certificate/key.pem  --ssl-cert ../resources/dev-ssl-certificate/cert.pem",
     "build": "ng build",
-    "build-prod": "npm run generate:schema && ng build --prod",
+    "build-prod": "npm run generate:schema && ng build --prod --base-href=\"/genesis-app/app/\"",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
