@@ -9,9 +9,7 @@ import gr.uth.repositories.AttachmentRepository;
 import gr.uth.repositories.ProductRepository;
 import gr.uth.resources.ProductResource;
 import gr.uth.services.ProductServiceImpl;
-import io.quarkus.panache.common.Parameters;
-import io.smallrye.mutiny.Uni;
-import io.smallrye.mutiny.helpers.test.UniAssertSubscriber;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,11 +17,10 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import test.BaseTest;
 import test.utils.AttachmentTestUtil;
-import test.utils.TestUtil;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductResourceTest extends BaseTest {
@@ -64,21 +61,11 @@ public class ProductResourceTest extends BaseTest {
         // AND the product is valid
         // AND the product has no Model
         final var testId = 1L;
-        var product = fromJson(REQUEST_PATH + "create_noModel.json", Product.class);
-
-        TestUtil.withListResultQuery(
-                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
-                validPhotos
-        );
-
-        Mockito.when(productRepository.persist(product))
-                .thenReturn(Uni.createFrom().item(TestUtil.entityWithId(testId, product)));
-
-        var actual = productResource.create(product)
-                .subscribe()
-                .withSubscriber(UniAssertSubscriber.create())
-                .assertCompleted().getItem();
-
+        Product product = fromJson(REQUEST_PATH + "create_noModel.json", Product.class);
+        Mockito.when(attachmentRepository.findByReferences(Mockito.anyList())).thenReturn(validPhotos);
+        product.setId(testId);
+        Mockito.when(productRepository.persist(product)).thenReturn(product);
+        Product actual = productResource.create(product);
         // THEN the response should contain the provided product along with an id
         assertEquals(RESPONSE_PATH + "create_noModel.json", actual);
     }
@@ -92,20 +79,12 @@ public class ProductResourceTest extends BaseTest {
         // AND the attachment is not found
 
         final var attachmentReference = "reference"; // representing a none existing reference
-        var product = fromJson(REQUEST_PATH + "create_withModel.json", Product.class);
-
-        TestUtil.withListResultQuery(
-                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
-                validPhotos
-        );
-        TestUtil.withFirstResultNullQuery(attachmentRepository.find("reference", attachmentReference));
-
+        Product product = fromJson(REQUEST_PATH + "create_withModel.json", Product.class);
+        Mockito.when(attachmentRepository.findByReferences(Mockito.anyList())).thenReturn(validPhotos);
+        Mockito.when(attachmentRepository.findByReference(attachmentReference)).thenReturn(Optional.empty());
         // THEN a validation exception should be thrown
-        productResource.create(product)
-                .subscribe()
-                .withSubscriber(UniAssertSubscriber.create())
-
-                .assertFailedWith(ValidationException.class, I18NMessage.ATTACHMENT_NOT_FOUND.getMessage()).getItem();
+        ValidationException validationException = Assertions.assertThrows(ValidationException.class, () -> productResource.create(product));
+        Assertions.assertEquals(I18NMessage.ATTACHMENT_NOT_FOUND.getMessage(), validationException.getValidationError().getMessage());
     }
 
     @Test
@@ -115,19 +94,12 @@ public class ProductResourceTest extends BaseTest {
         // AND the product has 2 photos
         // AND one of the two photos is not found
 
-        var product = fromJson(REQUEST_PATH + "create_withPhotos_attachmentNotFound.json", Product.class);
-
-        TestUtil.withListResultQuery(
-                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
-                Collections.singletonList(AttachmentTestUtil.createAttachment("photo reference 1", "image/png"))
-        );
-
+        Product product = fromJson(REQUEST_PATH + "create_withPhotos_attachmentNotFound.json", Product.class);
+        Mockito.when(attachmentRepository.findByReferences(Mockito.anyList()))
+                .thenReturn(List.of(AttachmentTestUtil.createAttachment("photo reference 1", "image/png")));
         // THEN a validation exception should be thrown
-        productResource.create(product)
-                .subscribe()
-                .withSubscriber(UniAssertSubscriber.create())
-
-                .assertFailedWith(ValidationException.class, I18NMessage.ATTACHMENT_NOT_FOUND.getMessage()).getItem();
+        ValidationException validationException = Assertions.assertThrows(ValidationException.class, () -> productResource.create(product));
+        Assertions.assertEquals(I18NMessage.ATTACHMENT_NOT_FOUND.getMessage(), validationException.getValidationError().getMessage());
     }
 
     @Test
@@ -136,19 +108,12 @@ public class ProductResourceTest extends BaseTest {
         // WHEN a new Product is to be created
         // AND the product has an invalid photo type
         final String photoReference = "photo reference 1";
-        var product = fromJson(REQUEST_PATH + "create_withPhotos_invalidImageType.json", Product.class);
-
-        TestUtil.withListResultQuery(
-                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
-                Collections.singletonList(AttachmentTestUtil.createAttachment(photoReference, "Text/plain"))
-        );
-
+        Product product = fromJson(REQUEST_PATH + "create_withPhotos_invalidImageType.json", Product.class);
+        Mockito.when(attachmentRepository.findByReferences(Mockito.anyList()))
+                .thenReturn(List.of(AttachmentTestUtil.createAttachment(photoReference, "Text/plain")));
         // THEN a validation exception should be thrown
-        productResource.create(product)
-                .subscribe()
-                .withSubscriber(UniAssertSubscriber.create())
-
-                .assertFailedWith(ValidationException.class, I18NMessage.INVALID_PHOTO_TYPE.getMessage()).getItem();
+        ValidationException validationException = Assertions.assertThrows(ValidationException.class, () -> productResource.create(product));
+        Assertions.assertEquals(I18NMessage.INVALID_PHOTO_TYPE.getMessage(), validationException.getValidationError().getMessage());
     }
 
     @Test
@@ -160,23 +125,13 @@ public class ProductResourceTest extends BaseTest {
         // WHEN a new Product is to be created
         final var testId = 1L;
         final var attachmentReference = "reference"; // representing a none existing reference
-        var product = fromJson(REQUEST_PATH + "create_withModel.json", Product.class);
-
-        TestUtil.withListResultQuery(
-                attachmentRepository.find(Mockito.eq("reference IN :references"), Mockito.any(Parameters.class)),
-                validPhotos);
-
-        TestUtil.withFirstResultQuery(attachmentRepository.find("reference", attachmentReference),
-                AttachmentTestUtil.createAttachment(attachmentReference));
-
-        Mockito.when(productRepository.persist(product))
-                .thenReturn(Uni.createFrom().item(TestUtil.entityWithId(testId, product)));
-
-        var actual = productResource.create(product)
-                .subscribe()
-                .withSubscriber(UniAssertSubscriber.create())
-                .assertCompleted().getItem();
-
+        Product product = fromJson(REQUEST_PATH + "create_withModel.json", Product.class);
+        Mockito.when(attachmentRepository.findByReferences(Mockito.anyList()))
+                .thenReturn(validPhotos);
+        Mockito.when(attachmentRepository.findByReference(attachmentReference)).thenReturn(Optional.of(AttachmentTestUtil.createAttachment(attachmentReference)));
+        product.setId(testId);
+        Mockito.when(productRepository.persist(product)).thenReturn(product);
+        Product actual = productResource.create(product);
         // THEN the response should contain the provided product along with an id and the attachment data
         assertEquals(RESPONSE_PATH + "create_withModel.json", actual, List.of("model.uploadDate"));
     }

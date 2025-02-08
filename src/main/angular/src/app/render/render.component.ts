@@ -10,6 +10,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Model } from '../api/models/model';
+import { ApiConfiguration } from '../api/api-configuration';
 
 @Component({
   selector: 'app-render-ui',
@@ -22,10 +23,10 @@ export class RenderComponent implements OnInit, Renderable {
   @Input()
   model: Model;
 
-  constructor(private graphicsEngine: GraphicsEngine) { }
+  constructor(private apiConfiguration: ApiConfiguration, private graphicsEngine: GraphicsEngine) { }
 
   ngOnInit(): void {
-      let modelRoute = environment.api.attachments + '/' + Utils.omitFileName(this.model.attachment.reference) + '/';
+      let modelRoute = this.apiConfiguration.rootUrl + '/' + environment.api.attachments + '/' + Utils.omitFileName(this.model.attachment.reference) + '/';
       let modelAttachment = this.model.attachment.name;
       this.graphicsEngine.start(this, modelRoute, modelAttachment);
   }

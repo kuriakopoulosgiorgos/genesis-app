@@ -5,19 +5,18 @@ import gr.uth.dto.ProductSortByField;
 import gr.uth.dto.SortByDirection;
 import gr.uth.models.Product;
 import gr.uth.services.ProductService;
-import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/products")
@@ -25,7 +24,10 @@ import java.util.List;
 public class ProductResource {
 
     @Inject
-    ProductService productService;
+    private ProductService productService;
+
+    public ProductResource() {
+    }
 
     public ProductResource(ProductService productService) {
         this.productService = productService;
@@ -33,7 +35,7 @@ public class ProductResource {
 
     @GET
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<Pageable<Product>> findAll(
+    public Pageable<Product> findAll(
             @QueryParam("sortByField") ProductSortByField sortByField,
             @QueryParam("sortByDirection") @DefaultValue("asc") SortByDirection sortByDirection,
             @QueryParam("page") @DefaultValue("1") @Min(1) int page,
@@ -48,7 +50,7 @@ public class ProductResource {
     @RolesAllowed("supplier")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<Product> create(@Valid Product product) {
+    public Product create(@Valid Product product) {
         return productService.create(product);
     }
 
@@ -56,7 +58,7 @@ public class ProductResource {
     @Path(value = "/{id}")
     @Consumes(value = MediaType.APPLICATION_JSON)
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<Product> findById(Long id) {
+    public Product findById(@PathParam("id") Long id) {
         return productService.findById(id);
     }
 
@@ -77,10 +79,9 @@ public class ProductResource {
                     content = @Content(mediaType = MediaType.TEXT_PLAIN)
             ),
     })
-    public Uni<Response> deleteById(Long id) {
-
-        return productService.deleteById(id).map(isDeleted ->
-                        isDeleted ? Response.status(Response.Status.NO_CONTENT).build()
-                                : Response.status(Response.Status.NOT_FOUND).build());
+    public Response deleteById(@PathParam("id") Long id) {
+        return productService.deleteById(id)
+                ? Response.status(Response.Status.NO_CONTENT).build()
+                : Response.status(Response.Status.NOT_FOUND).build();
     }
 }

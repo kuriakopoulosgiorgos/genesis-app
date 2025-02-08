@@ -1,12 +1,12 @@
 package gr.uth.models;
 
-import io.quarkus.hibernate.reactive.panache.PanacheEntity;
+import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Products", indexes = {
@@ -14,25 +14,97 @@ import java.util.List;
         @Index(name = "idx_product_description", columnList = "description")
 })
 @Entity
-public class Product extends PanacheEntity {
+@NamedQueries({
+        @NamedQuery(
+                name = "Product.deleteById",
+                query = """
+                        DELETE
+                        FROM Product p
+                        WHERE p.id = :id
+                        """
+        ),
+        @NamedQuery(
+                name = "Product.findByProductIds",
+                query = """
+                        SELECT p
+                        FROM Product p
+                        WHERE p.id IN :ids
+                        """
+        )
+})
+public class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotBlank
-    public String name;
-
+    private String name;
     @NotBlank
-    public String description;
-
+    private String description;
     @NotNull
-    public double price;
-
+    private double price;
     @NotEmpty
     @OneToMany(fetch = FetchType.EAGER)
-    public List<Attachment> photos;
-
+    private List<Attachment> photos = new ArrayList<>();
     @Valid
     @OneToOne(cascade = CascadeType.ALL)
-    public Model model;
-
+    private Model model;
     @Column(nullable = false)
-    public String uploadedBy;
+    private String uploadedBy;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public List<Attachment> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Attachment> photos) {
+        this.photos = photos;
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
+    }
+
+    public String getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(String uploadedBy) {
+        this.uploadedBy = uploadedBy;
+    }
 }

@@ -1,12 +1,14 @@
 package gr.uth.resources;
 
 import gr.uth.dto.AttachmentFormData;
+import gr.uth.dto.AttachmentMetaData;
 import gr.uth.dto.ValidationError;
 import gr.uth.models.Attachment;
 import gr.uth.models.BinaryFile;
 import gr.uth.services.AttachmentService;
 import gr.uth.services.BinaryFileService;
-import io.smallrye.mutiny.Uni;
+import jakarta.json.bind.Jsonb;
+import jakarta.ws.rs.core.*;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -14,34 +16,42 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.jboss.resteasy.reactive.MultipartForm;
 
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Path("/attachments")
 @Tag(name = "Attachment")
 public class AttachmentResource {
 
     @Inject
-    AttachmentService attachmentService;
+    private AttachmentService attachmentService;
 
     @Inject
-    BinaryFileService binaryFileService;
+    private BinaryFileService binaryFileService;
 
-    public AttachmentResource(AttachmentService attachmentService, BinaryFileService binaryFileService) {
+    @Inject
+    private Jsonb jsonb;
+
+    public AttachmentResource() {
+    }
+
+    public AttachmentResource(AttachmentService attachmentService, BinaryFileService binaryFileService, Jsonb jsonb) {
         this.attachmentService = attachmentService;
         this.binaryFileService = binaryFileService;
+        this.jsonb = jsonb;
     }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(value = MediaType.APPLICATION_JSON)
-    public Uni<List<Attachment>> uploadAttachments(
+    public List<Attachment> uploadAttachments(
             @RequestBody(
                     description = "The attachment binary data",
                     content = @Content(
@@ -50,8 +60,17 @@ public class AttachmentResource {
                     ),
                     required = true
             )
-            @MultipartForm AttachmentFormData attachmentFormData) {
-        return attachmentService.uploadAttachments(attachmentFormData);
+            List<EntityPart> entityParts
+    ) {
+        Map<String, AttachmentMetaData> attachmentMetaDataMap = entityParts.stream()
+                .filter(entityPart -> "attachmentMetaData".equals(entityPart.getName()))
+                .map(entityPart -> (Map<String, AttachmentMetaData>) jsonb.fromJson(entityPart.getContent(), new GenericType<Map<String, AttachmentMetaData>>() {}.getType()))
+                .findFirst()
+                .orElse(null);
+        List<EntityPart> files = entityParts.stream()
+                .filter(entityPart -> "file".equals(entityPart.getName()))
+                .toList();
+        return attachmentService.uploadAttachments(new AttachmentFormData(attachmentMetaDataMap, files));
     }
 
     @DELETE
@@ -70,11 +89,10 @@ public class AttachmentResource {
                     schema = @Schema(implementation = ValidationError.class))
             ),
     })
-    public Uni<Response> deleteByReference(String fileReference) {
-
-        return attachmentService.deleteByReference(fileReference).map(isDeleted ->
-                isDeleted ? Response.status(Response.Status.NO_CONTENT).build()
-                        : Response.status(Response.Status.NOT_FOUND).build());
+    public Response deleteByReference(String fileReference) {
+        return attachmentService.deleteByReference(fileReference)
+                ? Response.status(Response.Status.NO_CONTENT).build()
+                : Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Path("{fileReference:.+}")
@@ -91,24 +109,16 @@ public class AttachmentResource {
                     content = @Content(mediaType = MediaType.TEXT_PLAIN)
             ),
     })
-    public Uni<Response> retrieveFile(String fileReference) {
-
-        return attachmentService
-                .retrieveAttachmentByReference(fileReference)
-                .onItem().ifNotNull()
-                .transformToUni(attachment ->
-                    binaryFileService.findById(attachment.id)
-                            .flatMap((binaryFile) -> fileResponse(attachment, binaryFile))
-                .onItem()
-                .ifNull()
-                .continueWith(Response.status(Response.Status.NOT_FOUND).build()));
+    public Response retrieveFile(@PathParam("fileReference") String fileReference) {
+        Attachment attachment = attachmentService.retrieveAttachmentByReference(fileReference);
+        BinaryFile binaryFile = binaryFileService.findById(attachment.getId());
+        return fileResponse(attachment, binaryFile);
     }
 
-    private Uni<Response> fileResponse(Attachment attachment, BinaryFile binaryFile) {
-
-        return Uni.createFrom().item(Response.ok(binaryFile.data)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=" + attachment.name)
-                .header(HttpHeaders.CONTENT_TYPE, attachment.contentType)
-                .build());
+    private Response fileResponse(Attachment attachment, BinaryFile binaryFile) {
+        return Response.ok(binaryFile.getData())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=" + attachment.getName())
+                .header(HttpHeaders.CONTENT_TYPE, attachment.getContentType())
+                .build();
     }
 }

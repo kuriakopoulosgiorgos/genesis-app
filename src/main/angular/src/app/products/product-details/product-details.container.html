@@ -6,5 +6,6 @@
 <app-product-details-ui
   [product]="product$ | async"
   [quantity]="quantity$ | async"
+  [rootUrl]="rootUrl"
   (onAddToCart)="addToCart($event)"
 ></app-product-details-ui>

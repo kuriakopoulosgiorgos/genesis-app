@@ -6,6 +6,7 @@ import { Attachment } from 'src/app/api/models/attachment';
 import { UploadAttachmentsEvent } from 'src/app/events';
 import { Injectable } from '@angular/core';
 import { SUPPORTED_MODEL_EXTENSIONS } from 'src/app/constants';
+import { ApiConfiguration } from 'src/app/api/api-configuration';
 
 @Injectable()
 export class NewProductPresenter {
@@ -47,7 +48,9 @@ export class NewProductPresenter {
     model: undefined,
   };
 
-  constructor(private formBuilder: FormBuilder) {}
+  rootUrl: string = this.apiConfiguration.rootUrl;
+
+  constructor(private formBuilder: FormBuilder, private apiConfiguration: ApiConfiguration) {}
 
   init(model: Observable<Model>, photos: Observable<Attachment[]>): void {
     this.productForm.valueChanges.subscribe((productForm) => {

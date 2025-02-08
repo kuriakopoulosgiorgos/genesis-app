@@ -13,15 +13,16 @@ import { SupplierGuard } from './supplier.guard';
 import { ConfigurationService } from './api/services/configuration.service';
 import { switchMap } from 'rxjs/operators';
 import { from } from 'rxjs';
+import { ApiModule } from './api/api.module';
 
 function initializeKeycloak(configurationService: ConfigurationService, keycloak: KeycloakService) {
   return () =>
     configurationService.retrieveConfiguration().pipe(
       switchMap(configuration => from(keycloak.init({
         config: {
-          url: configuration['keycloak-url'],
-          realm: configuration['keycloak-realm'],
-          clientId: configuration['keycloak-client-id']
+          url: configuration['application.configuration.frontend.keycloak-url'],
+          realm: configuration['application.configuration.frontend.keycloak-realm'],
+          clientId: configuration['application.configuration.frontend.keycloak-client-id']
         },
         initOptions: {
           checkLoginIframe: false
@@ -47,6 +48,9 @@ function initializeKeycloak(configurationService: ConfigurationService, keycloak
           deps: [HttpClient]
       }
     }),
+    ApiModule.forRoot({
+      rootUrl: '/genesis-app'
+    }),
     NgbModule,
     KeycloakAngularModule
   ],
@@ -66,5 +70,5 @@ export class AppModule { }
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, '/genesis-app/app/assets/i18n/', '.json');
 }

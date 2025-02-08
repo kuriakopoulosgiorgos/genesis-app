@@ -9,88 +9,80 @@ import gr.uth.models.Attachment;
 import gr.uth.models.BinaryFile;
 import gr.uth.repositories.AttachmentRepository;
 import gr.uth.repositories.BinaryFileRepository;
-import io.quarkus.hibernate.reactive.panache.common.runtime.ReactiveTransactional;
-import io.smallrye.mutiny.Uni;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
+@Transactional
 @ApplicationScoped
 public class AttachmentServiceImpl implements AttachmentService {
 
-    final AttachmentRepository attachmentRepository;
-    final BinaryFileRepository binaryFileRepository;
+    private AttachmentRepository attachmentRepository;
+    private BinaryFileRepository binaryFileRepository;
 
+    public AttachmentServiceImpl() {
+    }
+
+    @Inject
     public AttachmentServiceImpl(AttachmentRepository attachmentRepository, BinaryFileRepository binaryFileRepository) {
         this.attachmentRepository = attachmentRepository;
         this.binaryFileRepository = binaryFileRepository;
     }
 
-    @ReactiveTransactional
     @Override
-    public Uni<List<Attachment>> uploadAttachments(AttachmentFormData attachmentFormData) {
+    public List<Attachment> uploadAttachments(AttachmentFormData attachmentFormData) {
 
         List<Attachment> attachments = new ArrayList<>();
-        List<BinaryFile> binaryFiles = new ArrayList<>();
         var attachmentsReference = UUID.randomUUID().toString();
-        for(int i = 0; i < attachmentFormData.file.size(); i++) {
-            AttachmentMetaData attachmentMetaData = Objects.nonNull(attachmentFormData.attachmentMetaData) ?
-                    attachmentFormData.attachmentMetaData.get("" + (i + 1)) : null;
+        for(int i = 0; i < attachmentFormData.getFile().size(); i++) {
+            AttachmentMetaData attachmentMetaData = Objects.nonNull(attachmentFormData.getAttachmentMetaData()) ?
+                    attachmentFormData.getAttachmentMetaData().get("" + (i + 1)) : null;
             String description = null;
             if(Objects.nonNull(attachmentMetaData)) {
                 description = attachmentMetaData.description;
             }
-            var fileUpload = attachmentFormData.file.get(i);
-            var attachment = new Attachment();
-            attachment.name = getFileName(fileUpload.fileName());
-            attachment.reference = attachmentsReference + "/" + fileUpload.fileName();
-            attachment.description = description;
-            attachment.size = fileUpload.size();
-            attachment.contentType  = fileUpload.contentType();
-
-            BinaryFile binaryFile = new BinaryFile();
-            binaryFile.attachment = attachment;
-
+            var fileUpload = attachmentFormData.getFile().get(i);
             try {
-                binaryFile.data = Files.readAllBytes(fileUpload.uploadedFile());
-                attachments.add(attachment);
-                binaryFiles.add(binaryFile);
+                var attachment = new Attachment();
+                var filename = fileUpload.getFileName().orElse(UUID.randomUUID().toString());
+                byte[] data = fileUpload.getContent(byte[].class);
+                attachment.setName(getFileName(filename));
+                attachment.setReference(attachmentsReference + "/" + filename);
+                attachment.setDescription(description);
+                attachment.setSize((long) data.length);
+                attachment.setContentType(fileUpload.getMediaType().toString());
+
+                BinaryFile binaryFile = new BinaryFile();
+                binaryFile.setAttachment(attachment);
+
+                binaryFile.setData(data);
+                attachmentRepository.persist(attachment);
+                binaryFileRepository.persist(binaryFile);
+                attachments.add(binaryFile.getAttachment());
             } catch (IOException e) {
-                return (Uni.createFrom().failure(e));
+                throw new RuntimeException(e.getMessage());
             }
         }
-        List<Uni<Attachment>> attachmentsUnis = IntStream.range(0, attachments.size())
-                .mapToObj(i -> attachmentRepository.persist(attachments.get(i)).onItem()
-                        .transformToUni(savedAttachment -> binaryFileRepository.persist(binaryFiles.get(i))
-                                .map(_binaryFile -> savedAttachment))).collect(Collectors.toList());
-
-        return Uni.combine().all()
-                .unis(attachmentsUnis)
-                .combinedWith(Attachment.class, ArrayList::new);
+        return attachments;
     }
 
 
-    @ReactiveTransactional
     @Override
-    public Uni<Boolean> deleteByReference(String reference) throws ValidationException {
-        return attachmentRepository.find("reference", reference).firstResult()
-                .onItem()
-                .ifNull().failWith(ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND))
-                .onItem()
-                .transformToUni(attachment -> binaryFileRepository.deleteById(attachment.id));
+    public boolean deleteByReference(String reference) throws ValidationException {
+        Attachment attachment = attachmentRepository.findByReference(reference).orElseThrow(() -> ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND));
+        return binaryFileRepository.deleteById(attachment.getId());
     }
 
-    @ReactiveTransactional
     @Override
-    public Uni<Attachment> retrieveAttachmentByReference(String reference) {
-        return attachmentRepository.find("reference", reference).firstResult();
+    public Attachment retrieveAttachmentByReference(String reference) {
+        return attachmentRepository.findByReference(reference).orElseThrow(() -> ExceptionBuilder.fromMessage(I18NMessage.ATTACHMENT_NOT_FOUND));
     }
 
     private String getFileName(String filePath) {

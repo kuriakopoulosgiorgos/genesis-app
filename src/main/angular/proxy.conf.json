@@ -1,6 +1,11 @@
 {
-  "/api": {
-    "target": "http://localhost:8081",
+  "/genesis-app/api": {
+    "target": "http://localhost:9080",
     "secure": false
+  },
+  "/genesis-app/app/assets": {
+    "target": "https://localhost:4200",
+    "secure": false,
+    "pathRewrite": {"^/genesis-app/app" : ""}
   }
 }

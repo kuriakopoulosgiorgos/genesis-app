@@ -16,6 +16,9 @@ export class ProductDetailsComponent implements OnInit {
   quantity = 0;
 
   @Input()
+  rootUrl: string;
+
+  @Input()
   previewMode = false;
 
   @Output()

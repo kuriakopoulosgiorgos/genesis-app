@@ -39,4 +39,4 @@ nb-configuration.xml
 .env
 
 # Angular distribution
-src/main/resources/META-INF/resources/**
+src/main/webapp/app/**
