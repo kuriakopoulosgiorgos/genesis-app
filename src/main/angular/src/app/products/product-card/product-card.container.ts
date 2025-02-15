@@ -13,11 +13,12 @@ export class ProductCardContainer {
   product: Product;
 
   quantity = 0;
-  rootUrl: string = this.apiConfiguration.rootUrl;
+  rootUrl: string;
 
   constructor(private apiConfiguration: ApiConfiguration, private cartService: CartService) { }
 
   ngOnInit(): void {
+    this.rootUrl = this.apiConfiguration.rootUrl;
     this.quantity = this.cartService.findQuantityByProductCode(this.product.id);
   }
 

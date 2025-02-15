@@ -1,7 +1,6 @@
 package gr.uth.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -14,7 +13,7 @@ public class Model {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime uploadDate;
-    @JsonIgnore
+    @JsonbTransient
     @OneToOne(mappedBy = "model")
     private Product product;
     @NotNull
